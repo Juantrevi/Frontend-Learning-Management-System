@@ -1,0 +1,6 @@
+zuztand:
+Zustand is a small, fast, and scalable state
+management library for React applications.
+It provides a simple API to manage global state
+in a React application without the boilerplate
+and complexity of other state management libraries like Redux.
