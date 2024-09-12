@@ -1,10 +1,39 @@
 import React from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
-import { Link } from 'react-router-dom'
+import {useEffect} from "react";
+import {useState} from "react";
+import apiInstance from "../../utils/axios.js";
+import {RESET_PASSWORD_EP} from "../../utils/constant.js";
+import Swal from "sweetalert2";
 
 
 function ForgotPassword() {
+  const [email, setEmail] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    const isValid = email;
+    setIsFormValid(isValid)
+  }, [email]);
+
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault()
+    setEmailSent(true)
+    try {
+      await apiInstance.get(RESET_PASSWORD_EP + email).then((res) => {
+      })
+    }catch (error){
+      Swal.fire(error, '', 'error')
+    }finally {
+      Swal.fire('Check your email to reset password', '', 'info')
+      //setIsLoading(false)
+    }
+  }
+
+
   return (
     <>
       <BaseHeader />
@@ -17,10 +46,10 @@ function ForgotPassword() {
                 <div className="mb-4">
                   <h1 className="mb-1 fw-bold">Forgot Password</h1>
                   <span>
-                    Let's help you get back into your account
+                    Lets help you get back into your account
                   </span>
                 </div>
-                <form className="needs-validation" noValidate="">
+                <form className="needs-validation" noValidate="" onSubmit={handleEmailSubmit}>
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email Address</label>
                     <input
@@ -30,13 +59,15 @@ function ForgotPassword() {
                       name="email"
                       placeholder="johndoe@gmail.com"
                       required=""
+                      onChange={(event) => setEmail(event.target.value)}
                     />
                   </div>
 
                   <div>
                     <div className="d-grid">
-                      <button type="submit" className="btn btn-primary">
-                        Reset Password <i className='fas fa-arrow-right'></i>
+                      <button type="submit" className="btn btn-primary" disabled={!isFormValid || emailSent}>
+                        {emailSent ? 'Email Sent' : 'Reset Password'} <i
+                          className={emailSent ? 'fas fa-paper-plane' : 'fas fa-arrow-right'}></i>
                       </button>
                     </div>
                   </div>
@@ -47,7 +78,7 @@ function ForgotPassword() {
         </div>
       </section>
 
-      <BaseFooter />
+      <BaseFooter/>
     </>
   )
 }

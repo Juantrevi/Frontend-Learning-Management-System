@@ -8,7 +8,7 @@ const useAxios = () => {
     const refreshToken = Cookie.get(constants.REFRESH_TOKEN);
 
     const axiosInstance = axios.create({
-        baseURL: constants.API_BASE_URL,
+        baseURL: constants.BASE_URL_EP,
         headers: { Authorization: `bearer ${accessToken}` }
     });
 

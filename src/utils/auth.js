@@ -119,7 +119,7 @@ import { handleApiError } from "./handleApiError.js";
 export const login = async (email, password) => {
     try {
         // Send a POST request to the login API with email and password
-        const { data, status } = await axios.post(constants.API_LOGIN, { email, password });
+        const { data, status } = await axios.post(constants.LOGIN_EP, { email, password });
 
         // If login is successful, set the user authentication tokens and show a success message
         if (status === 200) {
@@ -139,7 +139,7 @@ export const login = async (email, password) => {
 export const register = async (full_name, email, password, password2) => {
     try {
         // Send a POST request to the registration API with user details
-        const { data } = await axios.post(constants.API_REGISTER, { full_name, email, password, password2 });
+        const { data } = await axios.post(constants.REGISTER_EP, { full_name, email, password, password2 });
 
         // Automatically log in the user after successful registration
         await login(email, password);
@@ -205,7 +205,7 @@ export const setAuthUser = (access_token, refresh_token) => {
 // Function to get a new access token using the refresh token
 export const getRefreshedToken = async () => {
     const refresh_token = Cookie.get(constants.REFRESH_TOKEN);
-    const response = await axios.post(constants.API_REFRESH, { refresh: refresh_token });
+    const response = await axios.post(constants.REFRESH_TOKEN_EP, { refresh: refresh_token });
     return response.data;
 };
 

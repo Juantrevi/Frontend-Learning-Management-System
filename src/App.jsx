@@ -5,6 +5,7 @@ import Register from "./views/auth/Register.jsx";
 import Login from "./views/auth/Login.jsx";
 import Logout from "./views/auth/Logout.jsx";
 import {useAuthStore} from "./store/auth.js";
+import ForgotPassword from "./views/auth/ForgotPassword.jsx";
 
 function App() {
 
@@ -15,6 +16,8 @@ function App() {
                     <Route path={'/register/'} element={<Register/>} />
                     <Route path={'/login/'} element={<Login/>} />
                     <Route path={'/logout/'} element={<Logout/>} />
+                    <Route path={'/forgot-password/'} element={<ForgotPassword/>} />
+
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

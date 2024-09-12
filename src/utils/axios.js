@@ -1,9 +1,9 @@
 import axios from 'axios'
-import {API_BASE_URL} from "./constant.js";
+import {BASE_URL_EP} from "./constant.js";
 
 
 const apiInstance = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: BASE_URL_EP,
     timeout: 10000,
     headers: {
         'content-type': 'application/json',
