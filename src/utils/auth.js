@@ -124,7 +124,7 @@ export const login = async (email, password) => {
         // If login is successful, set the user authentication tokens and show a success message
         if (status === 200) {
             setAuthUser(data.access, data.refresh);
-            Swal.fire("Login Successfully", "", "success");
+            //Swal.fire("Login Successfully", "", "success");
         }
 
         return { data, error: null };
@@ -139,19 +139,16 @@ export const login = async (email, password) => {
 export const register = async (full_name, email, password, password2) => {
     try {
         // Send a POST request to the registration API with user details
-        console.log("BEFORE ENTERING")
-        console.log(constants.API_REGISTER)
         const { data } = await axios.post(constants.API_REGISTER, { full_name, email, password, password2 });
-        //const { data } = await axios.post('http://localhost:8000/api/v1/user/register/', { full_name, email, password, password2 });
 
         // Automatically log in the user after successful registration
         await login(email, password);
-        Swal.fire("Registration successfully", "", "success");
+        //Swal.fire("Registration successfully", "", "success");
         return { data, error: null };
     } catch (error) {
+
         // Handle any errors that occur during registration
-        console.log(error);
-        return handleApiError(error, "Something went wrong with the registration");
+        return handleApiError(error.response.data.email, "Something went wrong with the registration");
     }
 };
 
