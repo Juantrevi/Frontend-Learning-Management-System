@@ -1,10 +1,9 @@
 import axios from 'axios'
-import dotenv from 'dotenv'
+import {API_BASE_URL} from "./constant.js";
 
-dotenv.config();
 
 const apiInstance = axios.create({
-    baseURL: process.env.BASE_URL,
+    baseURL: API_BASE_URL,
     timeout: 10000,
     headers: {
         'content-type': 'application/json',
