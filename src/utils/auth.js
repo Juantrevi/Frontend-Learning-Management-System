@@ -160,7 +160,7 @@ export const logout = () => {
 
     // Clear the user state in the auth store
     useAuthStore.getState().setUser(null);
-    Swal.fire("Logout successfully", "", "success");
+
 };
 
 // Function to set the user based on stored tokens

@@ -1,9 +1,19 @@
-import React from 'react'
+import {React, useEffect} from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
-
+import {logout} from "../../utils/auth.js";
+import {Link, useNavigate} from "react-router-dom";
+import {useState} from "react";
+import Swal from "sweetalert2";
 
 function Logout() {
+
+  useEffect(() => {
+    logout()
+    Swal.fire("You have been logged out", '', 'info')
+  }, []);
+
+
   return (
     <>
       <BaseHeader />
@@ -16,17 +26,17 @@ function Logout() {
                 <div className="mb-4">
                   <h1 className="mb-1 fw-bold">You have been logged out</h1>
                   <span>
-                    Thanks for visiing our website, come back anytime!
+                    Thanks for visiting our website, come back anytime!
                   </span>
                 </div>
                 <form className="needs-validation mt-5" noValidate="">
                   <div className="d-grid d-flex">
-                    <button type="submit" className="btn btn-primary me-2 w-100">
+                    <Link type="submit" className="btn btn-primary me-2 w-100" to={'/login/'}>
                       Login <i className='fas fa-sign-in-alt'></i>
-                    </button>
-                    <button type="submit" className="btn btn-primary w-100">
+                    </Link>
+                    <Link type="submit" className="btn btn-primary w-100" to={'/register/'}>
                       Register <i className='fas fa-user-plus'></i>
-                    </button>
+                    </Link>
                   </div>
                 </form>
               </div>
