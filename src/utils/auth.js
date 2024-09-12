@@ -131,7 +131,7 @@ export const login = async (email, password) => {
     } catch (error) {
         // Handle any errors that occur during login
         console.log(error);
-        return handleApiError(error, "Something went wrong with the login");
+        return handleApiError(error.response.data.detail, "Something went wrong with the login");
     }
 };
 
@@ -188,6 +188,8 @@ export const setAuthUser = (access_token, refresh_token) => {
     // Store tokens in cookies
     Cookie.set(constants.ACCESS_TOKEN, access_token, { expires: 1, secure: true });
     Cookie.set(constants.REFRESH_TOKEN, refresh_token, { expires: 7, secure: true });
+    // Cookie.set(constants.ACCESS_TOKEN, access_token, { expires: 1, secure: true, httpOnly: true, sameSite: 'Strict' });
+    // Cookie.set(constants.REFRESH_TOKEN, refresh_token, { expires: 7, secure: true, httpOnly: true, sameSite: 'Strict' });
 
     // Decode the access token to get user information
     const user = jwt_decode(access_token) ?? null;

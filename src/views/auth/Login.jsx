@@ -1,10 +1,38 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import { Link } from 'react-router-dom'
+import {login} from "../../utils/auth.js";
+import {useNavigate} from "react-router-dom";
 
 
 function Login() {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const isValid = email && password;
+    setIsFormValid(isValid)
+  }, [email, password]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    const result = await login(email, password);
+
+    setIsLoading(false);
+
+    if (!result.error) {
+      navigate('/');
+    }
+  };
+
+
   return (
     <>
       <BaseHeader />
@@ -24,7 +52,7 @@ function Login() {
                   </span>
                 </div>
                 {/* Form */}
-                <form className="needs-validation" noValidate="">
+                <form className="needs-validation" noValidate="" onSubmit={handleSubmit}>
                   {/* Username */}
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label">
@@ -37,6 +65,7 @@ function Login() {
                       name="email"
                       placeholder="johndoe@gmail.com"
                       required=""
+                      onChange={(event) => setEmail(event.target.value)}
                     />
                     <div className="invalid-feedback">
                       Please enter valid username.
@@ -54,6 +83,7 @@ function Login() {
                       name="password"
                       placeholder="**************"
                       required=""
+                      onChange={(event) => setPassword(event.target.value)}
                     />
                     <div className="invalid-feedback">
                       Please enter valid password.
@@ -81,8 +111,9 @@ function Login() {
                   </div>
                   <div>
                     <div className="d-grid">
-                      <button type="submit" className="btn btn-primary">
-                        Sign in <i className='fas fa-sign-in-alt'></i>
+                      <button type="submit" className="btn btn-primary" disabled={!isFormValid || isLoading}>
+                        {isLoading ? 'Processing' : 'Sign in'} <i
+                          className={isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-user-plus'}></i>
                       </button>
                     </div>
                   </div>
@@ -94,7 +125,7 @@ function Login() {
       </section>
 
 
-      <BaseFooter />
+      <BaseFooter/>
     </>
   )
 }

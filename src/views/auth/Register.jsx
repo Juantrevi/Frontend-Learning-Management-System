@@ -6,6 +6,7 @@ import { register } from '../../utils/auth.js';
 import Swal from "sweetalert2";
 
 function Register() {
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,11 +29,14 @@ function Register() {
     event.preventDefault();
     setIsLoading(true);
 
-    await register(fullName, email, password, password2);
+    const result = await register(fullName, email, password, password2);
 
     setIsLoading(false);
-    navigate('/')
-    Swal.fire("Registration successful, you have now been logged in", "", "success")
+    if(!result.error){
+      navigate('/')
+      Swal.fire("Registration successful, you have now been logged in", "", "success")
+    }
+
   };
 
   return (
@@ -113,7 +117,7 @@ function Register() {
                   <div>
                     <div className="d-grid">
                       <button type="submit" className="btn btn-primary" disabled={!isFormValid || isLoading}>
-                        Sign Up <i className='fas fa-user-plus'></i>
+                        {isLoading ? 'Processing' : 'Register'} <i className={isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-user-plus'}></i>
                       </button>
                     </div>
                   </div>
