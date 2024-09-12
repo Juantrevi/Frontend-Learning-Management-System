@@ -1,6 +1,40 @@
 zuztand:
-Zustand is a small, fast, and scalable state
-management library for React applications.
-It provides a simple API to manage global state
-in a React application without the boilerplate
-and complexity of other state management libraries like Redux.
+    Zustand is a small, fast, and scalable state
+    management library for React applications.
+    It provides a simple API to manage global state
+    in a React application without the boilerplate
+    and complexity of other state management libraries like Redux.
+
+useState():
+    useState is a Hook in React that allows
+    you to add state to functional components.
+    State is a way to store and manage data that
+    can change over time within a component.
+        Explanation:
+        State: Think of state as a way to keep track of information that can change. For example, a user's input in a form, a counter value, or a list of items.
+
+        Functional Components: These are simpler components in React that are just functions. Before Hooks, only class components could have state.
+
+        useState Hook:
+        Initialization: You call useState with an initial value, and it returns an array with two elements:
+        The current state value.
+        A function to update that state value.
+
+        import React, { useState } from 'react';
+
+        function Counter() {
+          // Declare a state variable named "count" with an initial value of 0
+          const [count, setCount] = useState(0);
+
+          return (
+            <div>
+              <p>You clicked {count} times</p>
+              {/* When the button is clicked, update the state using setCount */}
+              <button onClick={() => setCount(count + 1)}>
+                Click me
+              </button>
+            </div>
+          );
+        }
+
+        export default Counter;

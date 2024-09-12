@@ -1,10 +1,30 @@
-import React from 'react'
+import {useState, useEffect} from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
-import { Link } from 'react-router-dom'
-
+import {Link, useSubmit} from 'react-router-dom'
+import apiInstance from "../../utils/axios.js";
+import {register} from "../../utils/auth.js";
 
 function Register() {
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("")
+  const [password2, setPassword2] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  console.log(fullName)
+  console.log(email)
+  console.log(password2)
+  console.log(password)
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setIsLoading(true)
+    await register(fullName, email, password, password2)
+  }
+
   return (
     <>
       <BaseHeader />
@@ -24,7 +44,7 @@ function Register() {
                   </span>
                 </div>
                 {/* Form */}
-                <form className="needs-validation" noValidate="">
+                <form className="needs-validation" noValidate="" onSubmit={handleSubmit}>
                   {/* Username */}
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label">Full Name</label>
@@ -35,6 +55,8 @@ function Register() {
                       name="full_name"
                       placeholder="John Doe"
                       required=""
+                      defaultValue={"Testing From Frontend"}
+                      onChange={(event) => setFullName(event.target.value)}
                     />
                   </div>
                   <div className="mb-3">
@@ -46,6 +68,8 @@ function Register() {
                       name="email"
                       placeholder="johndoe@gmail.com"
                       required=""
+                      defaultValue={"juantreviranus@gmail.com"}
+                      onChange={(event) => setEmail(event.target.value)}
                     />
                   </div>
                   
@@ -59,6 +83,8 @@ function Register() {
                       name="password"
                       placeholder="**************"
                       required=""
+                      defaultValue={"Jmy43525f"}
+                      onChange={(event) => setPassword(event.target.value)}
                     />
                   </div>
                   <div className="mb-3">
@@ -70,6 +96,8 @@ function Register() {
                       name="password"
                       placeholder="**************"
                       required=""
+                      defaultValue={"Jmy43525f"}
+                      onChange={(event) => setPassword2(event.target.value)}
                     />
                   </div>
                   <div>

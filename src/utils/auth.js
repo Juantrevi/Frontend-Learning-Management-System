@@ -139,7 +139,10 @@ export const login = async (email, password) => {
 export const register = async (full_name, email, password, password2) => {
     try {
         // Send a POST request to the registration API with user details
+        console.log("BEFORE ENTERING")
+        console.log(constants.API_REGISTER)
         const { data } = await axios.post(constants.API_REGISTER, { full_name, email, password, password2 });
+        //const { data } = await axios.post('http://localhost:8000/api/v1/user/register/', { full_name, email, password, password2 });
 
         // Automatically log in the user after successful registration
         await login(email, password);
