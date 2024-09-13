@@ -1,9 +1,69 @@
-import React from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
-
+import {useState, useEffect} from "react";
+import apiInstance from "../../utils/axios.js";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import Swal from "sweetalert2";
+import {
+  OTP_PARAMS,
+  REFRESH_TOKEN_PARAMS,
+  PASSWORD_CHANGE_EP,
+  UUIDB64_PARAMS
+} from "../../utils/constant.js";
+import {handleApiError} from "../../utils/handleApiError.js";
 
 function CreateNewPassword() {
+
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [passwordMatch, setPasswordMatch] = useState(false)
+  const [passwordLength, setPasswordLength] = useState(false)
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+
+  const otp = searchParams.get(OTP_PARAMS)
+  const uuidb64 = searchParams.get(UUIDB64_PARAMS)
+  const refreshToken = searchParams.get(REFRESH_TOKEN_PARAMS)
+
+
+  useEffect(() => {
+    // Check if passwords match and if they are at least 8 characters long
+    const match = password === confirmPassword;
+    const length = password.length >= 8 && confirmPassword.length >= 8;
+
+    setPasswordMatch(match);
+    setPasswordLength(length);
+    setIsFormValid(match && length);
+  }, [password, confirmPassword]);
+
+  const handleCreateNewPassword = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    const formData = new FormData()
+    formData.append('password', password)
+    formData.append(OTP_PARAMS, otp)
+    formData.append(UUIDB64_PARAMS, uuidb64)
+    formData.append(REFRESH_TOKEN_PARAMS, refreshToken)
+
+    try {
+      await apiInstance.post(PASSWORD_CHANGE_EP, formData).then((res) => {
+        Swal.fire(res.data.message)
+        navigate('/login')
+      })
+    }catch (error){
+        handleApiError(error, 'Something went wrong changing the password')
+    }finally {
+        setIsLoading(false)
+    }
+
+
+  }
+
+
   return (
     <>
       <BaseHeader />
@@ -18,8 +78,11 @@ function CreateNewPassword() {
                   <span>
                     Choose a new password for your account
                   </span>
+                  {!passwordLength ? <div className="text-danger">*Password should be at least 8 characters long</div> : ''}
+                  {!passwordMatch ? <div className="text-danger">*Password dont match</div> : ''}
+
                 </div>
-                <form className="needs-validation" noValidate="">
+                <form className="needs-validation" noValidate="" onSubmit={handleCreateNewPassword}>
                   <div className="mb-3">
                     <label htmlFor="password" className="form-label">
                       Enter New Password
@@ -31,6 +94,7 @@ function CreateNewPassword() {
                       name="password"
                       placeholder="**************"
                       required=""
+                      onChange={(event) => setPassword(event.target.value)}
                     />
                     <div className="invalid-feedback">
                       Please enter valid password.
@@ -49,6 +113,7 @@ function CreateNewPassword() {
                       name="password"
                       placeholder="**************"
                       required=""
+                      onChange={(event) => setConfirmPassword(event.target.value)}
                     />
                     <div className="invalid-feedback">
                       Please enter valid password.
@@ -59,8 +124,9 @@ function CreateNewPassword() {
 
                   <div>
                     <div className="d-grid">
-                      <button type="submit" className="btn btn-primary">
-                        Save New Password <i className='fas fa-check-circle'></i>
+                      <button type="submit" className="btn btn-primary" disabled={!isFormValid || isLoading}>
+                        {isLoading ? 'Processing' : 'Save New Password'} <i
+                          className={isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-check-circle'}></i>
                       </button>
                     </div>
                   </div>
@@ -71,7 +137,7 @@ function CreateNewPassword() {
         </div>
       </section>
 
-      <BaseFooter />
+      <BaseFooter/>
     </>
   )
 }

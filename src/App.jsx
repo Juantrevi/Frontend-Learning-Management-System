@@ -6,6 +6,7 @@ import Login from "./views/auth/Login.jsx";
 import Logout from "./views/auth/Logout.jsx";
 import {useAuthStore} from "./store/auth.js";
 import ForgotPassword from "./views/auth/ForgotPassword.jsx";
+import CreateNewPassword from "./views/auth/CreateNewPassword.jsx";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
                     <Route path={'/login/'} element={<Login/>} />
                     <Route path={'/logout/'} element={<Logout/>} />
                     <Route path={'/forgot-password/'} element={<ForgotPassword/>} />
+                    <Route path={'/create-new-password/'} element={<CreateNewPassword/>} />
 
                 </Routes>
             </MainWrapper>
