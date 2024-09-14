@@ -7,7 +7,8 @@ import Swal from "sweetalert2";
 
 function Register() {
 
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
@@ -19,17 +20,17 @@ function Register() {
 
   useEffect(() => {
     // Check if all fields are filled and passwords match
-    const isValid = fullName && email && password && password2 && password === password2 && password.length >= 8;
+    const isValid = firstName && lastName && email && password && password2 && password === password2 && password.length >= 8;
     setIsFormValid(isValid);
     setPasswordError(password !== password2 ? 'Passwords do not match' : '');
     setPasswordLengthError(password.length < 8 ? 'Password must be at least 8 characters long' : '');
-  }, [fullName, email, password, password2]);
+  }, [firstName, lastName, email, password, password2]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
-    const result = await register(fullName, email, password, password2);
+    const result = await register(firstName, lastName, email, password, password2);
 
     setIsLoading(false);
     if(!result.error){
@@ -59,17 +60,30 @@ function Register() {
                 </div>
                 {/* Form */}
                 <form className="needs-validation" noValidate="" onSubmit={handleSubmit}>
-                  {/* Full Name */}
+                  {/* First Name */}
                   <div className="mb-3">
-                    <label htmlFor="full_name" className="form-label">Full Name*</label>
+                    <label htmlFor="first_name" className="form-label">First Name*</label>
                     <input
                       type="text"
-                      id="full_name"
+                      id="first_name"
                       className="form-control"
-                      name="full_name"
+                      name="first_name"
                       placeholder="John Doe"
                       required=""
-                      onChange={(event) => setFullName(event.target.value)}
+                      onChange={(event) => setFirstName(event.target.value)}
+                    />
+                  </div>
+                  {/* Last Name */}
+                  <div className="mb-3">
+                    <label htmlFor="last_name" className="form-label">Last Name*</label>
+                    <input
+                        type="text"
+                        id="last_name"
+                        className="form-control"
+                        name="last_name"
+                        placeholder="John Doe"
+                        required=""
+                        onChange={(event) => setLastName(event.target.value)}
                     />
                   </div>
                   {/* Email */}
