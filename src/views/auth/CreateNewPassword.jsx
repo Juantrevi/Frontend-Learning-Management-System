@@ -59,10 +59,7 @@ function CreateNewPassword() {
     }finally {
         setIsLoading(false)
     }
-
-
   }
-
 
   return (
     <>
