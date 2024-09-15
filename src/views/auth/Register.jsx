@@ -40,6 +40,12 @@ function Register() {
 
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  };
+
   return (
     <>
       <BaseHeader />
@@ -68,8 +74,8 @@ function Register() {
                       id="first_name"
                       className="form-control"
                       name="first_name"
-                      placeholder="John Doe"
-                      required=""
+                      placeholder="John"
+                      required
                       onChange={(event) => setFirstName(event.target.value)}
                     />
                   </div>
@@ -81,8 +87,8 @@ function Register() {
                         id="last_name"
                         className="form-control"
                         name="last_name"
-                        placeholder="John Doe"
-                        required=""
+                        placeholder="Doe"
+                        required
                         onChange={(event) => setLastName(event.target.value)}
                     />
                   </div>
@@ -95,7 +101,7 @@ function Register() {
                       className="form-control"
                       name="email"
                       placeholder="johndoe@gmail.com"
-                      required=""
+                      required
                       onChange={(event) => setEmail(event.target.value)}
                     />
                   </div>
@@ -110,6 +116,7 @@ function Register() {
                       placeholder="**************"
                       required=""
                       onChange={(event) => setPassword(event.target.value)}
+                      onKeyDown={handleKeyDown}
                     />
                     {password.length < 8 && <div className="text-danger">Password must be at least 8 characters long</div>}
                   </div>
@@ -124,6 +131,7 @@ function Register() {
                       placeholder="**************"
                       required=""
                       onChange={(event) => setPassword2(event.target.value)}
+                      onKeyDown={handleKeyDown}
                     />
                     {passwordError && <div className="text-danger">{passwordError}</div>}
                   </div>
