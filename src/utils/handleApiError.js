@@ -7,8 +7,12 @@ export const handleApiError = (error, defaultMessage) => {
     if (error.response && error.response.data) {
         const data = error.response.data;
         const firstErrorKey = Object.keys(data)[0];
-        if (Array.isArray(data[firstErrorKey]) && data[firstErrorKey].length > 0) {
-            errorMessage = data[firstErrorKey][0];
+        const errorValue = data[firstErrorKey];
+
+        if (Array.isArray(errorValue) && errorValue.length > 0) {
+            errorMessage = errorValue[0];
+        } else if (typeof errorValue === 'string') {
+            errorMessage = errorValue;
         } else {
             errorMessage = error.toString();
         }

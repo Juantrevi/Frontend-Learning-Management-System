@@ -130,8 +130,8 @@ export const login = async (email, password) => {
         return { data, error: null };
     } catch (error) {
         // Handle any errors that occur during login
-        console.log(error);
-        return handleApiError(error.response.data.detail, "Something went wrong with the login");
+        console.log(error)
+        return handleApiError(error, "Something went wrong with the login");
     }
 };
 
@@ -148,7 +148,7 @@ export const register = async (first_name, last_name, email, password, password2
     } catch (error) {
 
         // Handle any errors that occur during registration
-        // return handleApiError(error.response.data.email, "Something went wrong with the registration");
+        console.log(error)
         return handleApiError(error, "Something went wrong with the registration");
     }
 };
