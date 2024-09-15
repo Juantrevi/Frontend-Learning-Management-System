@@ -148,7 +148,8 @@ export const register = async (first_name, last_name, email, password, password2
     } catch (error) {
 
         // Handle any errors that occur during registration
-        return handleApiError(error.response.data.email, "Something went wrong with the registration");
+        // return handleApiError(error.response.data.email, "Something went wrong with the registration");
+        return handleApiError(error, "Something went wrong with the registration");
     }
 };
 
