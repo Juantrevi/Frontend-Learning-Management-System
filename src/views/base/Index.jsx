@@ -3,6 +3,8 @@ import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import { Link } from 'react-router-dom'
 import useAxios from "../../utils/useAxios.js";
+import Rater from 'react-rater'
+import 'react-rater/lib/react-rater.css'
 import {handleApiError} from "../../utils/handleApiError.js";
 import apiInstance from "../../utils/axios.js";
 
@@ -17,7 +19,7 @@ function Index() {
         try {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             await useAxios()
-                .get(`/course/course-list/`)
+                .get(`/course/best-courses/`)
                 .then((res) => {
                 console.log(res.data)
                 setCourses(res.data)
@@ -195,35 +197,35 @@ function Index() {
                                                     <i className="fas fa-heart text-danger align-middle"/>
                                                     </a>
                                                 </div>
-                                                <h4 className="mb-2 text-truncate-line-2 ">
+                                                <h4 className="card-title mb-2">
                                                     <Link to={course.slug}
                                                           className="text-inherit text-decoration-none text-dark fs-5">
                                                         {course.title}
                                                     </Link>
                                                 </h4>
-                                                <small>By: {course.teacher.full_name}</small> <br/>
+                                                <div className="text-truncate ">
+                                                    <small>By: {course.teacher.full_name}</small> <br/>
+                                                </div>
+
                                                 <small>
-                                                    {course.students?.length} {course.students?.length > 1 ? "Students" : "Student"}
+                                                {course.students?.length} {course.students?.length > 1 ? "Students" : "Student"}
                                                 </small> <br/>
                                                 <div className="lh-1 mt-3 d-flex">
                                                 <span className="align-text-top">
                                                     <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
+                                                        <Rater total={5} rating={course.average_rating || 0}/>
                                                     </span>
-                                                </span>
-                                                    <span className="text-warning">4.5</span>
+                                                    <span className="text-warning ms-1">{course.average_rating || 0}</span>
+
                                                     <span className="fs-6 ms-2">({course.reviews?.length} Reviews)</span>
+                                                    </span>
                                                 </div>
                                             </div>
                                             {/* Card Footer */}
-                                            <div className="card-footer">
+                                            <div className="card-footer align-items-center">
                                                 <div className="row align-items-center g-0">
-                                                    <div className="col">
-                                                        <h5 className="mb-0">$39.00</h5>
+                                                    <div className="col ">
+                                                        <h5 className="mb-2 ">${course.price}</h5>
                                                     </div>
                                                     <div className="col-auto">
                                                         <a href="#"
