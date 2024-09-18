@@ -173,12 +173,13 @@ function Index() {
 
                                 {/*Looping through courses*/}
                                 {courses?.map((course, index) => (
+                                    // eslint-disable-next-line react/jsx-key
                                     <div className="col">
                                         {/* Card */}
                                         <div className="card card-hover">
                                             <Link to={course.slug}>
                                                 <img
-                                                    src="https://geeksui.codescandy.com/geeks/assets/images/course/course-python.jpg"
+                                                    src={course.image}
                                                     alt="course"
                                                     className="card-img-top"
                                                 />
@@ -186,19 +187,24 @@ function Index() {
                                             {/* Card Body */}
                                             <div className="card-body">
                                                 <div className="d-flex justify-content-between align-items-center mb-3">
-                                                    <span className="badge bg-info">Intermediate</span>
+                                                    <div>
+                                                        <span className="badge bg-info">{course.level}</span>
+                                                        <span className="badge bg-success ms-2">{course.language}</span>
+                                                    </div>
                                                     <a href="#" className="fs-5">
-                                                        <i className="fas fa-heart text-danger align-middle"/>
+                                                    <i className="fas fa-heart text-danger align-middle"/>
                                                     </a>
                                                 </div>
                                                 <h4 className="mb-2 text-truncate-line-2 ">
-                                                    <Link to={`/course-detail/slug/`}
+                                                    <Link to={course.slug}
                                                           className="text-inherit text-decoration-none text-dark fs-5">
-                                                        How to easily create a website with JavaScript
+                                                        {course.title}
                                                     </Link>
                                                 </h4>
-                                                <small>By: Claire Evans</small> <br/>
-                                                <small>16k Students</small> <br/>
+                                                <small>By: {course.teacher.full_name}</small> <br/>
+                                                <small>
+                                                    {course.students?.length} {course.students?.length > 1 ? "Students" : "Student"}
+                                                </small> <br/>
                                                 <div className="lh-1 mt-3 d-flex">
                                                 <span className="align-text-top">
                                                     <span className="fs-6">
@@ -210,7 +216,7 @@ function Index() {
                                                     </span>
                                                 </span>
                                                     <span className="text-warning">4.5</span>
-                                                    <span className="fs-6 ms-2">(9,300)</span>
+                                                    <span className="fs-6 ms-2">({course.reviews?.length} Reviews)</span>
                                                 </div>
                                             </div>
                                             {/* Card Footer */}
