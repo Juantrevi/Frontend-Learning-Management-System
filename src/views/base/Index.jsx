@@ -16,13 +16,16 @@ function Index() {
         setIsLoading(true)
         try {
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            await useAxios().get(`/course/course-list/`).then((res) => {
+            await useAxios()
+                .get(`/course/course-list/`)
+                .then((res) => {
                 console.log(res.data)
+                setCourses(res.data)
+                setIsLoading(false)
             });
-            setIsLoading(false)
         }catch (e){
             console.log(e)
-            handleApiError(e)
+            //handleApiError(e)
         }
     }
 
@@ -167,33 +170,36 @@ function Index() {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src="https://geeksui.codescandy.com/geeks/assets/images/course/course-angular.jpg"
-                                                alt="course"
-                                                className="card-img-top"
-                                            />
-                                        </Link>
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">Intermediate</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle"/>
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`}
-                                                      className="text-inherit text-decoration-none text-dark fs-5">
-                                                    How to easily create a website with JavaScript
-                                                </Link>
-                                            </h4>
-                                            <small>By: Claire Evans</small> <br/>
-                                            <small>16k Students</small> <br/>
-                                            <div className="lh-1 mt-3 d-flex">
+
+                                {/*Looping through courses*/}
+                                {courses?.map((course, index) => (
+                                    <div className="col">
+                                        {/* Card */}
+                                        <div className="card card-hover">
+                                            <Link to={course.slug}>
+                                                <img
+                                                    src="https://geeksui.codescandy.com/geeks/assets/images/course/course-python.jpg"
+                                                    alt="course"
+                                                    className="card-img-top"
+                                                />
+                                            </Link>
+                                            {/* Card Body */}
+                                            <div className="card-body">
+                                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                                    <span className="badge bg-info">Intermediate</span>
+                                                    <a href="#" className="fs-5">
+                                                        <i className="fas fa-heart text-danger align-middle"/>
+                                                    </a>
+                                                </div>
+                                                <h4 className="mb-2 text-truncate-line-2 ">
+                                                    <Link to={`/course-detail/slug/`}
+                                                          className="text-inherit text-decoration-none text-dark fs-5">
+                                                        How to easily create a website with JavaScript
+                                                    </Link>
+                                                </h4>
+                                                <small>By: Claire Evans</small> <br/>
+                                                <small>16k Students</small> <br/>
+                                                <div className="lh-1 mt-3 d-flex">
                                                 <span className="align-text-top">
                                                     <span className="fs-6">
                                                         <i className='fas fa-star text-warning'></i>
@@ -203,240 +209,68 @@ function Index() {
                                                         <i className='fas fa-star-half text-warning'></i>
                                                     </span>
                                                 </span>
-                                                <span className="text-warning">4.5</span>
-                                                <span className="fs-6 ms-2">(9,300)</span>
-                                            </div>
-                                        </div>
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">$39.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#"
-                                                       className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white"/>
-                                                        Enroll Now
-                                                    </a>
+                                                    <span className="text-warning">4.5</span>
+                                                    <span className="fs-6 ms-2">(9,300)</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src="https://geeksui.codescandy.com/geeks/assets/images/course/course-angular.jpg"
-                                                alt="course"
-                                                className="card-img-top"
-                                            />
-                                        </Link>
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">Intermediate</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle"/>
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`}
-                                                      className="text-inherit text-decoration-none text-dark fs-5">
-                                                    How to easily create a website with JavaScript
-                                                </Link>
-                                            </h4>
-                                            <small>By: Claire Evans</small> <br/>
-                                            <small>16k Students</small> <br/>
-                                            <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
-                                                </span>
-                                                <span className="text-warning">4.5</span>
-                                                <span className="fs-6 ms-2">(9,300)</span>
-                                            </div>
-                                        </div>
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">$39.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#"
-                                                       className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white"/>
-                                                        Enroll Now
-                                                    </a>
+                                            {/* Card Footer */}
+                                            <div className="card-footer">
+                                                <div className="row align-items-center g-0">
+                                                    <div className="col">
+                                                        <h5 className="mb-0">$39.00</h5>
+                                                    </div>
+                                                    <div className="col-auto">
+                                                        <a href="#"
+                                                           className="text-inherit text-decoration-none btn btn-primary">
+                                                            <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white"/>
+                                                            Enroll Now
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src="https://geeksui.codescandy.com/geeks/assets/images/course/course-angular.jpg"
-                                                alt="course"
-                                                className="card-img-top"
-                                            />
-                                        </Link>
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">Intermediate</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle"/>
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`}
-                                                      className="text-inherit text-decoration-none text-dark fs-5">
-                                                    How to easily create a website with JavaScript
-                                                </Link>
-                                            </h4>
-                                            <small>By: Claire Evans</small> <br/>
-                                            <small>16k Students</small> <br/>
-                                            <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
-                                                </span>
-                                                <span className="text-warning">4.5</span>
-                                                <span className="fs-6 ms-2">(9,300)</span>
-                                            </div>
-                                        </div>
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">$39.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#"
-                                                       className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white"/>
-                                                        Enroll Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src="https://geeksui.codescandy.com/geeks/assets/images/course/course-python.jpg"
-                                                alt="course"
-                                                className="card-img-top"
-                                            />
-                                        </Link>
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">Intermediate</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle"/>
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`}
-                                                      className="text-inherit text-decoration-none text-dark fs-5">
-                                                    How to easily create a website with JavaScript
-                                                </Link>
-                                            </h4>
-                                            <small>By: Claire Evans</small> <br/>
-                                            <small>16k Students</small> <br/>
-                                            <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
-                                                </span>
-                                                <span className="text-warning">4.5</span>
-                                                <span className="fs-6 ms-2">(9,300)</span>
-                                            </div>
-                                        </div>
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">$39.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#"
-                                                       className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white"/>
-                                                        Enroll Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
 
 
-                                <nav className="d-flex mt-5">
-                                    <ul className="pagination">
-                                        <li
-                                            className=""
-                                        >
-                                            <button
-                                                className="page-link me-1"
-                                            >
-                                                <i className="ci-arrow-left me-2"/>
-                                                Previous
-                                            </button>
-                                        </li>
-                                    </ul>
-                                    <ul className="pagination">
-                                        <li
-                                            key={1}
-                                            className="active"
-                                        >
-                                            <button
-                                                className="page-link"
-                                            >
-                                                1
-                                            </button>
-                                        </li>
-                                    </ul>
-                                    <ul className="pagination">
-                                        <li
-                                            className={`totalPages`}
-                                        >
-                                            <button
-                                                className="page-link ms-1"
-                                            >
-                                                Next
-                                                <i className="ci-arrow-right ms-3"/>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                {/*<nav className="d-flex mt-5">*/}
+                                {/*    <ul className="pagination">*/}
+                                {/*        <li*/}
+                                {/*            className=""*/}
+                                {/*        >*/}
+                                {/*            <button*/}
+                                {/*                className="page-link me-1"*/}
+                                {/*            >*/}
+                                {/*                <i className="ci-arrow-left me-2"/>*/}
+                                {/*                Previous*/}
+                                {/*            </button>*/}
+                                {/*        </li>*/}
+                                {/*    </ul>*/}
+                                {/*    <ul className="pagination">*/}
+                                {/*        <li*/}
+                                {/*            key={1}*/}
+                                {/*            className="active"*/}
+                                {/*        >*/}
+                                {/*            <button*/}
+                                {/*                className="page-link"*/}
+                                {/*            >*/}
+                                {/*                1*/}
+                                {/*            </button>*/}
+                                {/*        </li>*/}
+                                {/*    </ul>*/}
+                                {/*    <ul className="pagination">*/}
+                                {/*        <li*/}
+                                {/*            className={`totalPages`}*/}
+                                {/*        >*/}
+                                {/*            <button*/}
+                                {/*                className="page-link ms-1"*/}
+                                {/*            >*/}
+                                {/*                Next*/}
+                                {/*                <i className="ci-arrow-right ms-3"/>*/}
+                                {/*            </button>*/}
+                                {/*        </li>*/}
+                                {/*    </ul>*/}
+                                {/*</nav>*/}
 
 
                             </div>
