@@ -8,6 +8,7 @@ import {useAuthStore} from "./store/auth.js";
 import ForgotPassword from "./views/auth/ForgotPassword.jsx";
 import CreateNewPassword from "./views/auth/CreateNewPassword.jsx";
 import Index from "./views/base/Index.jsx";
+import CourseDetail from "./views/base/CourseDetail.jsx";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
                     <Route path={'/create-new-password/'} element={<CreateNewPassword/>} />
                     {/*Base routes*/}
                     <Route path={'/'} element={<Index/>} />
+                    <Route path={'/course-detail/:slug'} element={<CourseDetail/>} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

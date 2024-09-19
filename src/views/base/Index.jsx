@@ -179,7 +179,7 @@ function Index() {
                                     <div className="col">
                                         {/* Card */}
                                         <div className="card card-hover">
-                                            <Link to={course.slug}>
+                                            <Link to={`/course-detail/${course.slug}`}>
                                                 <img
                                                     src={course.image}
                                                     alt="course"
@@ -198,7 +198,7 @@ function Index() {
                                                     </a>
                                                 </div>
                                                 <h4 className="card-title mb-2">
-                                                    <Link to={course.slug}
+                                                    <Link to={`/course-detail/${course.slug}`}
                                                           className="text-inherit text-decoration-none text-dark fs-5">
                                                         {course.title}
                                                     </Link>
