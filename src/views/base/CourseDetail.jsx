@@ -7,7 +7,6 @@ import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import {handleApiError} from "../../utils/handleApiError.js";
 import {format} from "date-fns";
-import { BoltLoader } from 'react-awesome-loaders'
 import Loader from "../../components/Loader.jsx";
 
 function CourseDetail() {
@@ -42,7 +41,7 @@ function CourseDetail() {
     return (
         <>
             <BaseHeader />
-            {isLoading === true ?
+            {isLoading ?
                 <Loader/> :
                 <>
                     <section className="bg-light py-0 py-sm-5">
