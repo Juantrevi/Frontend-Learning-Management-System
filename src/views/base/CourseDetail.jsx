@@ -7,6 +7,8 @@ import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import {handleApiError} from "../../utils/handleApiError.js";
 import {format} from "date-fns";
+import { BoltLoader } from 'react-awesome-loaders'
+import Loader from "../../components/Loader.jsx";
 
 function CourseDetail() {
 
@@ -40,7 +42,8 @@ function CourseDetail() {
     return (
         <>
             <BaseHeader />
-            {isLoading === true ? <p>Loading <i className={'fas fa fa-spinner fa-spin'}></i></p> :
+            {isLoading === true ?
+                <Loader/> :
                 <>
                     <section className="bg-light py-0 py-sm-5">
                         <div className="container">
@@ -48,7 +51,7 @@ function CourseDetail() {
                                 <div className="col-lg-8">
                                     {/* Badge */}
                                     <h6 className="mb-3 font-base bg-primary text-white py-2 px-4 rounded-2 d-inline-block">
-                                        {course.category.title}
+                                        {course.category?.title}
                                     </h6>
                                     {/* Title */}
                                     <h1 className='mb-3'>{course.title}</h1>
