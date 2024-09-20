@@ -8,17 +8,18 @@ import BaseFooter from '../partials/BaseFooter'
 import {handleApiError} from "../../utils/handleApiError.js";
 import {format} from "date-fns";
 import Loader from "../../components/Loader.jsx";
+import Button from "react-bootstrap/Button";
 
 function CourseDetail() {
 
     const [course, setCourse] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
+    const [addToCartBtn, setAddToCartBtn] = useState('Add To Cart')
     const param = useParams()
     const slug = param.slug
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchCourse = async () => {
-
         try {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             await useAxios().get(`course/course-detail/${slug}/`).then((res) => {
@@ -37,6 +38,31 @@ function CourseDetail() {
     useEffect(() => {
         fetchCourse()
     }, []);
+
+    //--------------------------------------//
+
+    const addToCart = async (courseId, userId, price, country, cartId) => {
+        setAddToCartBtn("Adding To Cart")
+        const formData = new FormData()
+        console.log(`-------------------------${courseId}`)
+        formData.append("course_id", courseId);
+        formData.append("user_id", userId);
+        formData.append("price", price);
+        formData.append("country_name", country);
+        formData.append("cart_id", cartId);
+
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        await useAxios().post('course/cart/', formData).then((res) => {
+            try {
+                console.log(res.data)
+                setAddToCartBtn("Added To Cart")
+            }catch (e){
+                setAddToCartBtn("Add To Cart")
+                console.log(e)
+            }
+        })
+
+    }
 
     return (
         <>
@@ -163,6 +189,7 @@ function CourseDetail() {
 
                                                         {/*/!* Item Curriculum/}*/}
                                                         {course?.curriculum.map((c, index) => (
+                                                            // eslint-disable-next-line react/jsx-key
                                                             <div className="accordion-item mb-3">
                                                                 <h6 className="accordion-header font-base"
                                                                     id="heading-1">
@@ -512,6 +539,7 @@ function CourseDetail() {
                                                                         deep asking contribution this live of suppliers
                                                                         goals bit separated poured sort several the was
                                                                         organization the if relations go work after mechanic
+                                                                        {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                         But we've area wasn't everything needs of and doctor
                                                                         where would.
                                                                     </p>
@@ -599,20 +627,29 @@ function CourseDetail() {
                                                             >
                                                                 <div className="accordion-body pt-0">
                                                                     Night signs creeping yielding green Seasons together
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     man green fruitful make fish behold earth unto you'll
                                                                     lights living moving sea open for fish day multiply
                                                                     tree good female god had fruitful of creature fill
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     shall don't day fourth lesser he the isn't let
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     multiply may Creeping earth under was You're without
                                                                     which image stars in Own creeping night of wherein
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     Heaven years their he over doesn't whose won't kind
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     seasons light Won't that fish him whose won't also it
                                                                     dominion heaven fruitful Whales created And likeness
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     doesn't that Years without divided saying morning
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     creeping hath you'll seas cattle in multiply under
                                                                     together in us said above dry tree herb saw living
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     darkness without have won't for i behold meat brought
                                                                     winged Moving living second beast Over fish place
+                                                                    {/* eslint-disable-next-line react/no-unescaped-entities */}
                                                                     beast image very him evening Thing they're fruit
                                                                     together forth day Seed lights Land creature together
                                                                     Multiply waters form brought.
@@ -956,9 +993,25 @@ function CourseDetail() {
                                                     </div>
                                                     {/* Buttons */}
                                                     <div className="mt-3 d-sm-flex justify-content-sm-between ">
-                                                        <Link to="/cart/" className="btn btn-primary mb-0 w-100 me-2">
-                                                            <i className='fas fa-shopping-cart'></i> Add To Cart
-                                                        </Link>
+                                                        <Button
+                                                            type={'button'}
+                                                            className="btn btn-primary mb-0 w-100 me-2"
+                                                            onClick={() => addToCart(course?.id, 1, course.price, 'Argentina', '423432')}
+                                                        >
+                                                            {addToCartBtn === "Add To Cart" ? (
+                                                                <>
+                                                                    <i className='fas fa-shopping-cart' /> Add To Cart
+                                                                </>
+                                                            ) : addToCartBtn === "Adding To Cart" ? (
+                                                                <>
+                                                                    <i className='fas fa-spinner fa-spin' /> Adding To Cart
+                                                                </>
+                                                            ) : addToCartBtn === "Added To Cart" ? (
+                                                                <>
+                                                                    <i className='fas fa-check-circle' /> Added To Cart
+                                                                </>
+                                                            ) : null}
+                                                        </Button>
                                                         <Link to="/cart/" className="btn btn-success mb-0 w-100">
                                                             Enroll Now <i className='fas fa-arrow-right'></i>
                                                         </Link>
