@@ -10,6 +10,7 @@ import {format} from "date-fns";
 import Loader from "../../components/Loader.jsx";
 import Button from "react-bootstrap/Button";
 import CartId from "../plugin/CartId.js";
+import GetCurrentAddress from "../plugin/UserCountry.js";
 
 function CourseDetail() {
 
@@ -18,6 +19,9 @@ function CourseDetail() {
     const [addToCartBtn, setAddToCartBtn] = useState('Add To Cart')
     const param = useParams()
     const slug = param.slug
+    const country = GetCurrentAddress().country
+
+
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchCourse = async () => {
@@ -26,8 +30,6 @@ function CourseDetail() {
             await useAxios().get(`course/course-detail/${slug}/`).then((res) => {
                 setCourse(res.data)
                 setIsLoading(false)
-                console.log(res.data)
-                console.log(CartId())
             })
         }catch (e){
             console.log(e)
@@ -998,7 +1000,7 @@ function CourseDetail() {
                                                         <Button
                                                             type={'button'}
                                                             className="btn btn-primary mb-0 w-100 me-2"
-                                                            onClick={() => addToCart(course?.id, 1, course.price, 'Argentina', CartId())}
+                                                            onClick={() => addToCart(course?.id, 1, course.price, country, CartId())}
                                                         >
                                                             {addToCartBtn === "Add To Cart" ? (
                                                                 <>
