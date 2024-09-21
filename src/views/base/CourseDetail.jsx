@@ -9,6 +9,7 @@ import {handleApiError} from "../../utils/handleApiError.js";
 import {format} from "date-fns";
 import Loader from "../../components/Loader.jsx";
 import Button from "react-bootstrap/Button";
+import CartId from "../plugin/CartId.js";
 
 function CourseDetail() {
 
@@ -26,6 +27,7 @@ function CourseDetail() {
                 setCourse(res.data)
                 setIsLoading(false)
                 console.log(res.data)
+                console.log(CartId())
             })
         }catch (e){
             console.log(e)
@@ -871,7 +873,7 @@ function CourseDetail() {
                                                                                     <div className="d-flex w-100 justify-content-center">
                                                                                         <div className="me-2 ">
                                                                                             <h6 className="mb-1 lead fw-bold">
-                                                                                                <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
+                                                                                                <a href="#" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
                                                                                                 <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
                                                                                             </h6>
                                                                                             <p className="mb-0 mt-3  ">Removed demands expense account
@@ -996,7 +998,7 @@ function CourseDetail() {
                                                         <Button
                                                             type={'button'}
                                                             className="btn btn-primary mb-0 w-100 me-2"
-                                                            onClick={() => addToCart(course?.id, 1, course.price, 'Argentina', '423432')}
+                                                            onClick={() => addToCart(course?.id, 1, course.price, 'Argentina', CartId())}
                                                         >
                                                             {addToCartBtn === "Add To Cart" ? (
                                                                 <>
