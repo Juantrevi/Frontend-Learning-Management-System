@@ -11,6 +11,7 @@ import Loader from "../../components/Loader.jsx";
 import Button from "react-bootstrap/Button";
 import CartId from "../plugin/CartId.js";
 import GetCurrentAddress from "../plugin/UserCountry.js";
+import UserData from "../plugin/UserData.js";
 
 function CourseDetail() {
 
@@ -20,6 +21,7 @@ function CourseDetail() {
     const param = useParams()
     const slug = param.slug
     const country = GetCurrentAddress().country
+    const userId = UserData().user_id
 
 
 
@@ -48,7 +50,6 @@ function CourseDetail() {
     const addToCart = async (courseId, userId, price, country, cartId) => {
         setAddToCartBtn("Adding To Cart")
         const formData = new FormData()
-        console.log(`-------------------------${courseId}`)
         formData.append("course_id", courseId);
         formData.append("user_id", userId);
         formData.append("price", price);
@@ -60,6 +61,7 @@ function CourseDetail() {
             try {
                 console.log(res.data)
                 setAddToCartBtn("Added To Cart")
+                // toast.success(res.message)
             }catch (e){
                 setAddToCartBtn("Add To Cart")
                 console.log(e)
@@ -1000,7 +1002,7 @@ function CourseDetail() {
                                                         <Button
                                                             type={'button'}
                                                             className="btn btn-primary mb-0 w-100 me-2"
-                                                            onClick={() => addToCart(course?.id, 1, course.price, country, CartId())}
+                                                            onClick={() => addToCart(course?.id, userId, course.price, country, CartId())}
                                                         >
                                                             {addToCartBtn === "Add To Cart" ? (
                                                                 <>
