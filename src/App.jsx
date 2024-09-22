@@ -9,6 +9,7 @@ import ForgotPassword from "./views/auth/ForgotPassword.jsx";
 import CreateNewPassword from "./views/auth/CreateNewPassword.jsx";
 import Index from "./views/base/Index.jsx";
 import CourseDetail from "./views/base/CourseDetail.jsx";
+import Cart from "./views/base/Cart.jsx";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
                     {/*Base routes*/}
                     <Route path={'/'} element={<Index/>} />
                     <Route path={'/course-detail/:slug'} element={<CourseDetail/>} />
+                    <Route path={'/cart/'} element={<Cart />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

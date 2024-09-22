@@ -1,10 +1,40 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
-
+import {useState, useEffect} from "react";
+import apiInstance from "../../utils/axios.js";
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
+import CartId from "../plugin/CartId.js";
 
 function Cart() {
+
+    const [cart, setCart] = useState([])
+    const [cartStats, setCartStats] = useState([])
+
+    const fetchCartItem = async () => {
+        try {
+            await apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+                console.log(res.data)
+                setCart(res.data)
+            })
+            await apiInstance.get(`cart/stats/${CartId()}`).then((res) => {
+                console.log(res.data)
+                setCartStats(res.data)
+            })
+        }catch (e){
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        fetchCartItem()
+    }, []);
+
+
+
+
+
+
+
     return (
         <>
             <BaseHeader />
@@ -44,73 +74,41 @@ function Cart() {
                             {/* Main content START */}
                             <div className="col-lg-8 mb-4 mb-sm-0">
                                 <div className="p-4 shadow rounded-3">
-                                    <h5 className="mb-0 mb-3">Cart Items (3)</h5>
+                                    <h5 className="mb-0 mb-3">Cart Items ({cart?.length})</h5>
 
                                     <div className="table-responsive border-0 rounded-3">
                                         <table className="table align-middle p-4 mb-0">
                                             <tbody className="border-top-2">
-                                                <tr>
-                                                    <td>
-                                                        <div className="d-lg-flex align-items-center">
-                                                            <div className="w-100px w-md-80px mb-2 mb-md-0">
-                                                                <img src="https://eduport.webestica.com/assets/images/courses/4by3/07.jpg" style={{ width: "100px", height: "70px", objectFit: "cover" }} className="rounded" alt="" />
-                                                            </div>
-                                                            <h6 className="mb-0 ms-lg-3 mt-2 mt-lg-0">
-                                                                <a href="#" className='text-decoration-none text-dark' >Building Scalable APIs with GraphQL</a>
-                                                            </h6>
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-center">
-                                                        <h5 className="text-success mb-0">$350</h5>
-                                                    </td>
-                                                    <td>
-                                                        <button className="btn btn-sm btn-danger px-2 mb-0">
-                                                            <i className="fas fa-fw fa-times" />
-                                                        </button>
-                                                    </td>
-                                                </tr>
 
+                                            {cart?.map((c, index) => (
                                                 <tr>
                                                     <td>
                                                         <div className="d-lg-flex align-items-center">
                                                             <div className="w-100px w-md-80px mb-2 mb-md-0">
-                                                                <img src="https://eduport.webestica.com/assets/images/courses/4by3/07.jpg" style={{ width: "100px", height: "70px", objectFit: "cover" }} className="rounded" alt="" />
+                                                                <img
+                                                                    src={c.course.image}
+                                                                    style={{
+                                                                        width: "100px",
+                                                                        height: "70px",
+                                                                        objectFit: "cover"
+                                                                    }} className="rounded" alt=""/>
                                                             </div>
                                                             <h6 className="mb-0 ms-lg-3 mt-2 mt-lg-0">
-                                                                <a href="#" className='text-decoration-none text-dark' >Building Scalable APIs with GraphQL</a>
+                                                                <a href="#" className='text-decoration-none text-dark'>{c.course.title}</a>
                                                             </h6>
                                                         </div>
                                                     </td>
                                                     <td className="text-center">
-                                                        <h5 className="text-success mb-0">$350</h5>
+                                                        <h5 className="text-success mb-0">${c.course.price}</h5>
                                                     </td>
                                                     <td>
                                                         <button className="btn btn-sm btn-danger px-2 mb-0">
-                                                            <i className="fas fa-fw fa-times" />
+                                                            <i className="fas fa-fw fa-times"/>
                                                         </button>
                                                     </td>
                                                 </tr>
+                                            ))}
 
-                                                <tr>
-                                                    <td>
-                                                        <div className="d-lg-flex align-items-center">
-                                                            <div className="w-100px w-md-80px mb-2 mb-md-0">
-                                                                <img src="https://eduport.webestica.com/assets/images/courses/4by3/07.jpg" style={{ width: "100px", height: "70px", objectFit: "cover" }} className="rounded" alt="" />
-                                                            </div>
-                                                            <h6 className="mb-0 ms-lg-3 mt-2 mt-lg-0">
-                                                                <a href="#" className='text-decoration-none text-dark' >Building Scalable APIs with GraphQL</a>
-                                                            </h6>
-                                                        </div>
-                                                    </td>
-                                                    <td className="text-center">
-                                                        <h5 className="text-success mb-0">$350</h5>
-                                                    </td>
-                                                    <td>
-                                                        <button className="btn btn-sm btn-danger px-2 mb-0">
-                                                            <i className="fas fa-fw fa-times" />
-                                                        </button>
-                                                    </td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -168,18 +166,18 @@ function Cart() {
                             <div className="col-lg-4">
                                 <div className="p-4 shadow rounded-3">
                                     <h4 className="mb-3">Cart Total</h4>
-                                    <ul class="list-group mb-3">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <ul className="list-group mb-3">
+                                        <li className="list-group-item d-flex justify-content-between align-items-center">
                                             Sub Total
-                                            <span>$10.99</span>
+                                            <span>${cartStats.price}</span>
                                         </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <li className="list-group-item d-flex justify-content-between align-items-center">
                                             Tax
-                                            <span>$0.99</span>
+                                            <span>${cartStats.tax}</span>
                                         </li>
-                                        <li class="list-group-item d-flex fw-bold justify-content-between align-items-center">
+                                        <li className="list-group-item d-flex fw-bold justify-content-between align-items-center">
                                             Total
-                                            <span className='fw-bold'>$8.99</span>
+                                            <span className='fw-bold'>${cartStats.total}</span>
                                         </li>
                                     </ul>
                                     <div className="d-grid">
