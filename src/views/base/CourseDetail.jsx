@@ -40,6 +40,7 @@ function CourseDetail() {
         }
     }
 
+
     const formattedDate = course.date ? format(new Date(course.date), 'MM/yyyy') : '';
 
     useEffect(() => {

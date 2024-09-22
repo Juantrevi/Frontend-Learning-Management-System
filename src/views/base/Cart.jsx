@@ -4,6 +4,7 @@ import apiInstance from "../../utils/axios.js";
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import CartId from "../plugin/CartId.js";
+import Toast from "../plugin/Toast.js";
 
 function Cart() {
 
@@ -21,6 +22,25 @@ function Cart() {
                 setCartStats(res.data)
             })
         }catch (e){
+            console.log(e)
+        }
+    }
+
+    const cartItemDelete = async (itemId) => {
+        try {
+            await apiInstance.delete(`course/cart-item-delete/${CartId()}/${itemId}`).then((res) => {
+                console.log(res.data)
+                fetchCartItem()
+                Toast().fire({
+                    title: res.data.message,
+                    icon: "success"
+                })
+            })
+        }catch (e){
+            await Toast().fire({
+                title: 'Something went wrong',
+                icon: "warning"
+            })
             console.log(e)
         }
     }
@@ -102,7 +122,11 @@ function Cart() {
                                                         <h5 className="text-success mb-0">${c.course.price}</h5>
                                                     </td>
                                                     <td>
-                                                        <button className="btn btn-sm btn-danger px-2 mb-0">
+                                                        <button
+                                                            onClick={() => cartItemDelete(c.id)}
+                                                            className="btn btn-sm btn-danger px-2 mb-0"
+                                                            type={"button"}
+                                                            >
                                                             <i className="fas fa-fw fa-times"/>
                                                         </button>
                                                     </td>
