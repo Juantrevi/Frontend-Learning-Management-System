@@ -2,10 +2,8 @@ import {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import useAxios from "../../utils/useAxios.js";
 import {useParams} from "react-router-dom";
-
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
-import {handleApiError} from "../../utils/handleApiError.js";
 import {format} from "date-fns";
 import Loader from "../../components/Loader.jsx";
 import Button from "react-bootstrap/Button";
@@ -15,66 +13,88 @@ import UserData from "../plugin/UserData.js";
 import Toast from "../plugin/Toast.js";
 
 function CourseDetail() {
-
     const [course, setCourse] = useState([]);
-    const [isLoading, setIsLoading] = useState(true)
-    const [addToCartBtn, setAddToCartBtn] = useState('Add To Cart')
-    const param = useParams()
-    const slug = param.slug
-    const country = GetCurrentAddress().country
-    const userId = UserData().user_id
-
-
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchCourse = async () => {
-        try {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            await useAxios().get(`course/course-detail/${slug}/`).then((res) => {
-                setCourse(res.data)
-                setIsLoading(false)
-            })
-        }catch (e){
-            console.log(e)
-            // handleApiError(e)
-        }
-    }
-
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [addToCartBtn, setAddToCartBtn] = useState('Add To Cart');
+    const [cart, setCart] = useState([]);
+    const param = useParams();
+    const slug = param.slug;
+    const country = GetCurrentAddress()?.country;
+    const userId = UserData()?.user_id;
     const formattedDate = course.date ? format(new Date(course.date), 'MM/yyyy') : '';
 
-    useEffect(() => {
-        fetchCourse()
-    }, []);
+    // ------------------------------------------------------------------------------------------------------------- //
 
-    //--------------------------------------//
+    const fetchCartItems = async () => {
+        try {
+            const res = await useAxios().get(`cart/all/${CartId()}/`);
+            setCart(res.data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    // ------------------------------------------------------------------------------------------------------------- //
+
+    const fetchCourse = async () => {
+        try {
+            const res = await useAxios().get(`course/course-detail/${slug}/`);
+            setCourse(res.data);
+            setIsLoading(false);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    // ------------------------------------------------------------------------------------------------------------- //
 
     const addToCart = async (courseId, userId, price, country, cartId) => {
-        setAddToCartBtn("Adding To Cart")
-        const formData = new FormData()
+        setAddToCartBtn("Adding To Cart");
+        const formData = new FormData();
         formData.append("course_id", courseId);
         formData.append("user_id", userId);
         formData.append("price", price);
         formData.append("country_name", country);
         formData.append("cart_id", cartId);
 
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         await useAxios().post('course/cart/', formData).then((res) => {
             try {
-                console.log(res.data)
-                setAddToCartBtn("Added To Cart")
+                console.log(res.data);
+                setAddToCartBtn("Added To Cart");
                 Toast().fire({
                     title: 'Added to cart',
                     icon: 'success'
-                })
-                // toast.success(res.message)
-            }catch (e){
-                setAddToCartBtn("Add To Cart")
-                console.log(e)
+                });
+                fetchCartItems(); // Refresh the cart data
+            } catch (e) {
+                setAddToCartBtn("Add To Cart");
+                console.log(e);
             }
-        })
+        });
+    };
 
-    }
+    // ------------------------------------------------------------------------------------------------------------- //
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchCartItems();
+            await fetchCourse();
+        };
+        fetchData();
+    }, [slug]);
+
+    // ------------------------------------------------------------------------------------------------------------- //
+
+    useEffect(() => {
+        if (course.id && cart.length > 0) {
+            const isCourseInCart = cart.some(cartItem => cartItem.course.id === course.id);
+            if (isCourseInCart) {
+                setAddToCartBtn('Already In Cart');
+            }
+        }
+    }, [course, cart]);
+
+
 
     return (
         <>
@@ -1022,7 +1042,11 @@ function CourseDetail() {
                                                                 <>
                                                                     <i className='fas fa-check-circle' /> Added To Cart
                                                                 </>
-                                                            ) : null}
+                                                            ) :addToCartBtn === "Already In Cart" ? (
+                                                                <>
+                                                                    <i className='fas fa-check-circle' /> Already In Cart
+                                                                </>
+                                                                ) : null}
                                                         </Button>
                                                         <Link to="/cart/" className="btn btn-success mb-0 w-100">
                                                             Enroll Now <i className='fas fa-arrow-right'></i>

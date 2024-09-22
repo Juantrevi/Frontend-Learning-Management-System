@@ -50,11 +50,6 @@ function Cart() {
     }, []);
 
 
-
-
-
-
-
     return (
         <>
             <BaseHeader />
@@ -132,6 +127,9 @@ function Cart() {
                                                     </td>
                                                 </tr>
                                             ))}
+                                            {cart?.length < 1 &&
+                                                <p className={'mt-1 p-4'}>No items in the cart</p>
+                                            }
 
                                             </tbody>
                                         </table>

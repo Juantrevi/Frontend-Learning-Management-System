@@ -1,7 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {useState, useEffect} from "react";
+import apiInstance from "../../utils/axios.js";
+import CartId from "../plugin/CartId.js";
 
 function BaseHeader() {
+    const [cart, setCart] = useState([])
+
+    const fetchCartItem = async () => {
+        try {
+            await apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+                console.log(res.data)
+                setCart(res.data)
+            })
+        }catch (e){
+            console.log(e)
+        }
+    }
+
+
+    useEffect(() => {
+        fetchCartItem()
+    }, []);
+
+
     return (
         <div>
             <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
@@ -142,7 +164,7 @@ function BaseHeader() {
                             Register <i className="fas fa-user-plus"></i>
                         </Link>
                         <Link className="btn btn-success ms-2 d-flex align-items-center text-nowrap" to="/cart/">
-                            Cart (3) <i className="fas fa-shopping-cart"></i>
+                            Cart ({cart.length}) <i className="fas fa-shopping-cart"></i>
                         </Link>
                     </div>
                 </div>
