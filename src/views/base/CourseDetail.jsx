@@ -12,6 +12,7 @@ import Button from "react-bootstrap/Button";
 import CartId from "../plugin/CartId.js";
 import GetCurrentAddress from "../plugin/UserCountry.js";
 import UserData from "../plugin/UserData.js";
+import Toast from "../plugin/Toast.js";
 
 function CourseDetail() {
 
@@ -61,6 +62,10 @@ function CourseDetail() {
             try {
                 console.log(res.data)
                 setAddToCartBtn("Added To Cart")
+                Toast().fire({
+                    title: 'Added to cart',
+                    icon: 'success'
+                })
                 // toast.success(res.message)
             }catch (e){
                 setAddToCartBtn("Add To Cart")
