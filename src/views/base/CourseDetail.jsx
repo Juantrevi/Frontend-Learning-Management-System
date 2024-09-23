@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import useAxios from "../../utils/useAxios.js";
 import {useParams} from "react-router-dom";
@@ -11,6 +11,9 @@ import CartId from "../plugin/CartId.js";
 import GetCurrentAddress from "../plugin/UserCountry.js";
 import UserData from "../plugin/UserData.js";
 import Toast from "../plugin/Toast.js";
+import {CartContext} from "../plugin/Context.js";
+import apiInstance from "../../utils/axios.js";
+
 
 function CourseDetail() {
     const [course, setCourse] = useState([]);
@@ -21,6 +24,7 @@ function CourseDetail() {
     const slug = param.slug;
     const country = GetCurrentAddress()?.country;
     const userId = UserData()?.user_id;
+    const [cartCount, setCartCount] = useContext(CartContext)
     const formattedDate = course.date ? format(new Date(course.date), 'MM/yyyy') : '';
 
     // ------------------------------------------------------------------------------------------------------------- //
@@ -59,13 +63,19 @@ function CourseDetail() {
 
         await useAxios().post('course/cart/', formData).then((res) => {
             try {
-                console.log(res.data);
+
                 setAddToCartBtn("Added To Cart");
                 Toast().fire({
                     title: 'Added to cart',
                     icon: 'success'
                 });
+
+                apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+                    setCartCount(res.data?.length)
+                })
+
                 fetchCartItems(); // Refresh the cart data
+
             } catch (e) {
                 setAddToCartBtn("Add To Cart");
                 console.log(e);

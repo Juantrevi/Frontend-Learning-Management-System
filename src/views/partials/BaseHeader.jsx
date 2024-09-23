@@ -1,27 +1,10 @@
-import React from "react";
+import {useContext} from "react";
 import { Link } from "react-router-dom";
-import {useState, useEffect} from "react";
-import apiInstance from "../../utils/axios.js";
-import CartId from "../plugin/CartId.js";
+import {CartContext} from "../plugin/Context.js";
 
 function BaseHeader() {
-    const [cart, setCart] = useState([])
 
-    const fetchCartItem = async () => {
-        try {
-            await apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
-                console.log(res.data)
-                setCart(res.data)
-            })
-        }catch (e){
-            console.log(e)
-        }
-    }
-
-
-    useEffect(() => {
-        fetchCartItem()
-    }, []);
+    const [cartCount, setCartCount] = useContext(CartContext)
 
 
     return (
@@ -164,7 +147,7 @@ function BaseHeader() {
                             Register <i className="fas fa-user-plus"></i>
                         </Link>
                         <Link className="btn btn-success ms-2 d-flex align-items-center text-nowrap" to="/cart/">
-                            Cart ({cart.length}) <i className="fas fa-shopping-cart"></i>
+                            Cart ({cartCount}) <i className="fas fa-shopping-cart"></i>
                         </Link>
                     </div>
                 </div>

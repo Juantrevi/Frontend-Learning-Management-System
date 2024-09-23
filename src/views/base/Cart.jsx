@@ -1,24 +1,25 @@
 import { Link } from 'react-router-dom'
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import apiInstance from "../../utils/axios.js";
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import CartId from "../plugin/CartId.js";
 import Toast from "../plugin/Toast.js";
+import {CartContext} from "../plugin/Context.js";
 
 function Cart() {
 
     const [cart, setCart] = useState([])
     const [cartStats, setCartStats] = useState([])
+    const [cartCount, setCartCount] = useContext(CartContext)
+
 
     const fetchCartItem = async () => {
         try {
             await apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
-                console.log(res.data)
                 setCart(res.data)
             })
             await apiInstance.get(`cart/stats/${CartId()}`).then((res) => {
-                console.log(res.data)
                 setCartStats(res.data)
             })
         }catch (e){
@@ -29,12 +30,16 @@ function Cart() {
     const cartItemDelete = async (itemId) => {
         try {
             await apiInstance.delete(`course/cart-item-delete/${CartId()}/${itemId}`).then((res) => {
-                console.log(res.data)
                 fetchCartItem()
                 Toast().fire({
                     title: res.data.message,
                     icon: "success"
                 })
+
+                apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+                    setCartCount(res.data?.length)
+                })
+
             })
         }catch (e){
             await Toast().fire({

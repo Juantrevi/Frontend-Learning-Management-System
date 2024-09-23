@@ -21,7 +21,6 @@ function Index() {
             await useAxios()
                 .get(`/course/best-courses/`)
                 .then((res) => {
-                console.log(res.data)
                 setCourses(res.data)
                 setIsLoading(false)
             });
@@ -35,7 +34,6 @@ function Index() {
         fetchCourse()
     }, []);
 
-    console.log(courses)
 
 
 
