@@ -8,13 +8,14 @@ import Toast from "../plugin/Toast.js";
 import {CartContext} from "../plugin/Context.js";
 import {userId} from "../../utils/constant.js";
 import Button from "react-bootstrap/Button";
-
+import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js";
 
 
 function Checkout() {
     const [order, setOrder] = useState([])
     const [coupon, setCoupon] = useState([])
-
+    const [paymentLoading, setPaymentLoading] = useState(false)
+    const navigate = useNavigate()
     const param = useParams()
 
     const fetchCheckOutOrder = async () => {
@@ -47,6 +48,17 @@ function Checkout() {
                 title: 'Coupon does not exists'
             })
         }
+    }
+
+    const initialOptions = {
+        clientId: import.meta.env.VITE_REACT_APP_PAYPAL_CLIENT_ID,
+        currency: "EUR",
+        intent: 'capture'
+    }
+
+    const payWithStripe = (event) => {
+        setPaymentLoading(true)
+        event.target.form.submit()
     }
 
 
@@ -248,9 +260,45 @@ function Checkout() {
                                                 </li>
                                             </ul>
                                             <div className="d-grid">
-                                                <Link to={`/success/txn_id/`} className="btn btn-lg btn-success mt-2"> Pay With PayPal</Link>
-                                                <Link to={`/success/txn_id/`} className="btn btn-lg btn-success mt-2"> Pay With Stripe</Link>
-                                            </div>
+                                                <PayPalScriptProvider options={initialOptions}>
+                                                    <PayPalButtons className='mt-3'
+                                                                   createOrder={(data, actions) => {
+                                                                       return actions.order.create({
+                                                                           purchase_units: [
+                                                                               {
+                                                                                   amount: {
+                                                                                       currency_code: "EUR",
+                                                                                       value: order.total.toString()
+                                                                                   }
+                                                                               }
+                                                                           ]
+                                                                       })
+                                                                   }}
+
+                                                                   onApprove={(data, actions) => {
+                                                                       return actions.order.capture().then((details) => {
+                                                                           const name = details.payer.name.given_name;
+                                                                           const status = details.status;
+                                                                           const paypal_order_id = data.orderID;
+
+                                                                           console.log(status);
+                                                                           if (status === "COMPLETED") {
+                                                                               navigate(`/payment-success/${order.oid}/?paypal_order_id=${paypal_order_id}`)
+                                                                           }
+                                                                       })
+                                                                   }}
+                                                    />
+                                                </PayPalScriptProvider>
+                                                <form action="" className={'w-100'}>
+                                                    <Button
+                                                        to={`/success/txn_id/`}
+                                                        className="btn btn-lg btn-success mt-2"
+                                                    >
+                                                        {" "}
+                                                            Pay With Stripe
+                                                    </Button>
+                                                </form>
+                                                </div>
                                             <p className="small mb-0 mt-2 text-center">
                                                 By proceeding to payment, you agree to these{" "}<a href="#"> <strong>Terms of Service</strong></a>
                                             </p>

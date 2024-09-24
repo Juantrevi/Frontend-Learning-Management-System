@@ -1,6 +1,5 @@
 import UserData from "../views/plugin/UserData.js";
 
-
 export const userId = UserData()?.user_id;
 // export const teacherId = UserData()?.teacher_id;
 export const ACCESS_TOKEN = 'access_token';
@@ -16,3 +15,4 @@ export const PASSWORD_CHANGE_EP = 'user/password-change/'
 export const UUIDB64_PARAMS = 'uuidb64'
 export const REFRESH_TOKEN_PARAMS = 'refresh_token'
 export const OTP_PARAMS = 'otp'
+
