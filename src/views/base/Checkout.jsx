@@ -13,19 +13,44 @@ import Button from "react-bootstrap/Button";
 
 function Checkout() {
     const [order, setOrder] = useState([])
+    const [coupon, setCoupon] = useState([])
 
     const param = useParams()
 
     const fetchCheckOutOrder = async () => {
         try {
-            apiInstance.get(`order/checkout/${param.order_oid}/`).then((res) => {
-                console.log(res.data)
+            await apiInstance.get(`order/checkout/${param.order_oid}/`).then((res) => {
                 setOrder(res.data)
             })
         }catch (e){
             console.log(e)
         }
     }
+
+    const applyCoupon = async () => {
+        const formData = new FormData()
+        formData.append('order_oid', order?.oid)
+        formData.append('coupon_code', coupon)
+
+        try {
+            await apiInstance.post(`order/coupon/`, formData).then((res) => {
+                setOrder(res.data)
+                fetchCheckOutOrder()
+                Toast().fire({
+                    icon: res.data.icon,
+                    title: res.data.message
+                })
+            })
+        }catch (e){
+            Toast().fire({
+                icon: 'error',
+                title: 'Coupon does not exists'
+            })
+        }
+    }
+
+
+
 
     useEffect(() => {
         fetchCheckOutOrder()
@@ -186,8 +211,19 @@ function Checkout() {
 
 
                                         <div className="input-group mt-1">
-                                            <input className="form-control form-control" placeholder="COUPON CODE" />
-                                            <button type="button" className="btn btn-primary">Apply</button>
+                                            <input
+                                                className="form-control form-control"
+                                                placeholder="COUPON CODE"
+                                                onChange={(e) => setCoupon(e.target.value)}
+
+                                            />
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={applyCoupon}
+                                            >
+                                                    Apply
+                                            </button>
                                         </div>
 
 
