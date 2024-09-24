@@ -1,4 +1,8 @@
-export const userId = 1;
+import UserData from "../views/plugin/UserData.js";
+
+
+export const userId = UserData()?.user_id;
+// export const teacherId = UserData()?.teacher_id;
 export const ACCESS_TOKEN = 'access_token';
 export const REFRESH_TOKEN = 'refresh_token';
 export const BASE_URL_EP = 'http://localhost:8000/api/v1/';

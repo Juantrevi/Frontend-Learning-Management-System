@@ -1,18 +1,29 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import { Link } from 'react-router-dom'
 import useAxios from "../../utils/useAxios.js";
 import Rater from 'react-rater'
 import 'react-rater/lib/react-rater.css'
-import {handleApiError} from "../../utils/handleApiError.js";
 import apiInstance from "../../utils/axios.js";
+import Toast from "../plugin/Toast.js";
+import CartId from "../plugin/CartId.js";
+import GetCurrentAddress from "../plugin/UserCountry.js";
+import UserData from "../plugin/UserData.js";
+import {CartContext} from "../plugin/Context.js";
+import Button from "react-bootstrap/Button";
 
 
 
 function Index() {
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
+    const country = GetCurrentAddress()?.country;
+    const userId = UserData()?.user_id;
+    const cartId = CartId()
+    const [cartCount, setCartCount] = useContext(CartContext)
+
+
 
     const fetchCourse = async () => {
         setIsLoading(true)
@@ -35,6 +46,31 @@ function Index() {
     }, []);
 
 
+    const addToCart = async (courseId, userId, price, country, cartId) => {
+        const formData = new FormData();
+        formData.append("course_id", courseId);
+        formData.append("user_id", userId);
+        formData.append("price", price);
+        formData.append("country_name", country);
+        formData.append("cart_id", cartId);
+
+        await useAxios().post('course/cart/', formData).then((res) => {
+            try {
+
+                Toast().fire({
+                    title: 'Added to cart',
+                    icon: 'success'
+                });
+
+                apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+                    setCartCount(res.data?.length)
+                })
+
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    };
 
 
 
@@ -220,18 +256,27 @@ function Index() {
                                                 </div>
                                             </div>
                                             {/* Card Footer */}
-                                            <div className="card-footer align-items-center">
-                                                <div className="row align-items-center g-0">
-                                                    <div className="col ">
-                                                        <h5 className="mb-2 ">${course.price}</h5>
-                                                    </div>
-                                                    <div className="col-auto">
-                                                        <a href="#"
-                                                           className="text-inherit text-decoration-none btn btn-primary">
-                                                            <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white"/>
-                                                            Enroll Now
-                                                        </a>
-                                                    </div>
+                                            <div className="card-footer d-flex flex-column align-items-start">
+                                                <h5 className="mb-2">${course.price}</h5>
+                                                <div className="mt-auto d-flex align-items-center">
+                                                    <Button
+                                                        onClick={() => addToCart(
+                                                            course.id,
+                                                            userId,
+                                                            course.price,
+                                                            country,
+                                                            cartId)}
+                                                        type={'button'}
+                                                        className={'text-inherit text-decoration-none btn btn-primary me-2'}
+                                                    >
+                                                        <i className="fas fa-shopping-cart text-primary align-middle text-white"/>
+                                                    </Button>
+                                                    <Link
+                                                        to={""}
+                                                        className="text-inherit text-decoration-none btn btn-primary">
+                                                            Enroll Now{" "}
+                                                        <i className="fas fa-arrow-right text-primary align-middle text-white"/>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>

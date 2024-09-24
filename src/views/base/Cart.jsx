@@ -6,12 +6,17 @@ import BaseFooter from '../partials/BaseFooter'
 import CartId from "../plugin/CartId.js";
 import Toast from "../plugin/Toast.js";
 import {CartContext} from "../plugin/Context.js";
+import {userId} from "../../utils/constant.js";
+import Button from "react-bootstrap/Button";
+import {useNavigate} from "react-router-dom";
 
 function Cart() {
 
     const [cart, setCart] = useState([])
     const [cartStats, setCartStats] = useState([])
     const [cartCount, setCartCount] = useContext(CartContext)
+    const [bioData, setBioData] = useState({full_name: '', email: '', country: ''})
+    const navigate = useNavigate()
 
 
     const fetchCartItem = async () => {
@@ -54,6 +59,31 @@ function Cart() {
         fetchCartItem()
     }, []);
 
+    const handleBioDataChange = async (event) => {
+        setBioData({
+            ...bioData,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const createOrder = async (e) => {
+        e.preventDefault()
+        const formData = new  FormData()
+        formData.append('full_name', bioData.full_name)
+        formData.append('email', bioData.email)
+        formData.append('country', bioData.country)
+        formData.append('cart_id', CartId())
+        formData.append('user_id', userId)
+
+        try {
+            await apiInstance.post(`order/create-order/`, formData).then((res) => {
+                navigate(`/checkout/${res.data.order_oid}`)
+            })
+        }catch (e){
+            console.log(e)
+        }
+
+    }
 
     return (
         <>
@@ -89,7 +119,7 @@ function Cart() {
 
             <section className="pt-5">
                 <div className="container">
-                    <form  >
+                    <form onSubmit={createOrder} >
                         <div className="row g-4 g-sm-5">
                             {/* Main content START */}
                             <div className="col-lg-8 mb-4 mb-sm-0">
@@ -157,6 +187,9 @@ function Cart() {
                                                 className="form-control"
                                                 id="yourName"
                                                 placeholder="Name"
+                                                name={'full_name'}
+                                                value={bioData.full_name}
+                                                onChange={handleBioDataChange}
                                             />
                                         </div>
                                         {/* Email */}
@@ -169,19 +202,25 @@ function Cart() {
                                                 className="form-control"
                                                 id="emailInput"
                                                 placeholder="Email"
+                                                name={'email'}
+                                                value={bioData.email}
+                                                onChange={handleBioDataChange}
                                             />
                                         </div>
                                         
                                         {/* Country option */}
                                         <div className="col-md-12 bg-light-input">
                                             <label htmlFor="mobileNumber" className="form-label">
-                                                Select country *
+                                                Enter country *
                                             </label>
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 id="mobileNumber"
                                                 placeholder="Country"
+                                                name={'country'}
+                                                value={bioData.country}
+                                                onChange={handleBioDataChange}
                                             />
                                         </div>
 
@@ -208,9 +247,9 @@ function Cart() {
                                         </li>
                                     </ul>
                                     <div className="d-grid">
-                                        <Link to={`/checkout/`} className="btn btn-lg btn-success">
+                                        <Button type={'submit'} className="btn btn-lg btn-success">
                                             Proceed to Checkout
-                                        </Link>
+                                        </Button>
                                     </div>
                                     <p className="small mb-0 mt-2 text-center">
                                         By proceeding to checkout, you agree to these{" "}<a href="#"> <strong>Terms of Service</strong></a>
