@@ -209,7 +209,6 @@ function Index() {
 
                                 {/*Looping through courses*/}
                                 {courses?.map((course, index) => (
-                                    // eslint-disable-next-line react/jsx-key
                                     <div className="col">
                                         {/* Card */}
                                         <div className="card card-hover">

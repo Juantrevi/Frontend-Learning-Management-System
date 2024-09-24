@@ -15,6 +15,8 @@ import {CartContext} from "./views/plugin/Context.js";
 import apiInstance from "./utils/axios.js";
 import CartId from "./views/plugin/CartId.js";
 import Checkout from "./views/base/Checkout.jsx";
+import Success from "./views/base/Success.jsx";
+import Search from "./views/base/Search.jsx";
 
 function App() {
 
@@ -44,6 +46,8 @@ function App() {
                     <Route path={'/course-detail/:slug'} element={<CourseDetail/>} />
                     <Route path={'/cart/'} element={<Cart />} />
                     <Route path={'/checkout/:order_oid/'} element={<Checkout />} />
+                    <Route path={'/payment-success/:order_oid/'} element={<Success />} />
+                    <Route path={'/search/'} element={<Search />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>
