@@ -1,16 +1,10 @@
 import React from "react";
-import {useContext, useEffect, useState} from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState} from 'react'
 import useAxios from "../../utils/useAxios.js";
-import Rater from 'react-rater'
 import 'react-rater/lib/react-rater.css'
-import apiInstance from "../../utils/axios.js";
-import Toast from "../plugin/Toast.js";
 import CartId from "../plugin/CartId.js";
 import GetCurrentAddress from "../plugin/UserCountry.js";
 import UserData from "../plugin/UserData.js";
-import {CartContext} from "../plugin/Context.js";
-import Button from "react-bootstrap/Button";
 import BaseHeader from "../partials/BaseHeader.jsx";
 import BaseFooter from "../partials/BaseFooter.jsx";
 import CourseCard from "../../components/CourseCard.jsx";
@@ -36,6 +30,19 @@ function Search() {
       console.log(e);
     }
   };
+
+  // Pagination
+  const itemsPerPage = 2;
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = courses.slice(indexOfFirstItem, indexOfLastItem)
+  const totalPages = Math.ceil(courses.length / itemsPerPage)
+  const pageNumbers = Array.from(
+      {length: totalPages},
+      (_, index) => index + 1
+      )
+
 
   useEffect(() => {
     fetchCourse();
@@ -76,7 +83,7 @@ function Search() {
             <div className="row">
               <div className="col-md-12">
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                  {courses?.map((course, index) => (
+                  {currentItems?.map((course, index) => (
                       <CourseCard
                           key={index}
                           course={course}
@@ -86,23 +93,26 @@ function Search() {
                       />
                   ))}
                 </div>
+
                 <nav className="d-flex mt-5">
                   <ul className="pagination">
-                    <li className="">
-                      <button className="page-link me-1">
+                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                      <button className="page-link me-1" onClick={() => setCurrentPage(currentPage - 1)}>
                         <i className="ci-arrow-left me-2" />
                         Previous
                       </button>
                     </li>
                   </ul>
                   <ul className="pagination">
-                    <li key={1} className="active">
-                      <button className="page-link">1</button>
-                    </li>
+                    {pageNumbers.map((number) => (
+                        <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+                          <button className="page-link" onClick={() => setCurrentPage(number)}>{number}</button>
+                        </li>
+                    ))}
                   </ul>
                   <ul className="pagination">
-                    <li className={`totalPages`}>
-                      <button className="page-link ms-1">
+                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                    <button className="page-link ms-1" onClick={() => setCurrentPage(currentPage + 1)}>
                         Next
                         <i className="ci-arrow-right ms-3" />
                       </button>

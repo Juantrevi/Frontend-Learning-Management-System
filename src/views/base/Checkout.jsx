@@ -288,6 +288,13 @@ function Checkout() {
                                                                 }
                                                             });
                                                         }}
+                                                        onError={(err) => {
+                                                            console.error("PayPal Checkout onError", err);
+                                                            alert("An error occurred during the PayPal transaction. Please try again.");
+                                                        }}
+                                                        onCancel={() => {
+                                                            alert("PayPal transaction was cancelled.");
+                                                        }}
                                                     />
                                                 </PayPalScriptProvider>
                                             </div>
