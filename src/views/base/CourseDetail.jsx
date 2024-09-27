@@ -45,6 +45,7 @@ function CourseDetail() {
             const res = await useAxios().get(`course/course-detail/${slug}/`);
             setCourse(res.data);
             setIsLoading(false);
+            console.log(course)
         } catch (e) {
             console.log(e);
         }
@@ -1039,6 +1040,7 @@ function CourseDetail() {
                                                             type={'button'}
                                                             className="btn btn-primary mb-0 w-100 me-2"
                                                             onClick={() => addToCart(course?.id, userId, course.price, country, CartId())}
+                                                            disabled={addToCartBtn === "Already In Cart"}
                                                         >
                                                             {addToCartBtn === "Add To Cart" ? (
                                                                 <>

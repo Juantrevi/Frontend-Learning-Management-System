@@ -17,6 +17,8 @@ function Index() {
     const country = GetCurrentAddress()?.country;
     const userId = UserData()?.user_id;
     const cartId = CartId()
+    const [userStats, setUserStats] = useState('')
+
 
     const fetchCourse = async () => {
         setIsLoading(true)
@@ -34,11 +36,25 @@ function Index() {
         }
     }
 
+    const fetchUserStats = async () => {
+        try {
+            await useAxios()
+                .get(`/student/summary/`)
+                .then((res) => {
+                    setUserStats(res.data)
+                });
+        }catch (e){
+            console.log(e)
+        }
+    }
+
     useEffect(() => {
+        fetchUserStats()
         fetchCourse()
     }, []);
 
     console.log(courses)
+    console.log(userStats)
 
 
     return (

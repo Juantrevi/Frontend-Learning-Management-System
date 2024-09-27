@@ -1,5 +1,5 @@
 // src/components/CourseCard.jsx
-import React, { useContext } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import Rater from 'react-rater';
 import 'react-rater/lib/react-rater.css';
@@ -12,6 +12,9 @@ import { CartContext } from "../views/plugin/Context.js";
 
 const CourseCard = ({ course, userId, country, cartId }) => {
   const [cartCount, setCartCount] = useContext(CartContext);
+  const [userStats, setUserStats] = useState([])
+  const [cart, setCart] = useState([])
+
 
   const addToCart = async (courseId, userId, price, country, cartId) => {
     const formData = new FormData();
@@ -21,7 +24,8 @@ const CourseCard = ({ course, userId, country, cartId }) => {
     formData.append("country_name", country);
     formData.append("cart_id", cartId);
 
-    await useAxios().post('course/cart/', formData).then((res) => {
+    await useAxios().post('course/cart/', formData)
+        .then((res) => {
       try {
         Toast().fire({
           title: 'Added to cart',
@@ -29,6 +33,7 @@ const CourseCard = ({ course, userId, country, cartId }) => {
         });
 
         apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+          setCart(res.data)
           setCartCount(res.data?.length);
         });
 
@@ -37,6 +42,37 @@ const CourseCard = ({ course, userId, country, cartId }) => {
       }
     });
   };
+
+  const fetchUserStats = async () => {
+    try {
+      await useAxios()
+          .get(`/student/summary/`)
+          .then((res) => {
+            setUserStats(res.data)
+          });
+    }catch (e){
+      console.log(e)
+    }
+  }
+
+  const fetchCartItems = async () => {
+    try {
+      const res = await useAxios()
+          .get(`cart/all/${CartId()}/`);
+      setCart(res.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserStats()
+    fetchCartItems()
+  }, []);
+
+  const isEnrolled = userStats[0]?.enrolled_course_ids?.includes(course.id);
+  const isCourseInCart = cart.some(cartItem => cartItem.course.id === course.id);
+
 
   return (
     <div className="col">
@@ -75,21 +111,57 @@ const CourseCard = ({ course, userId, country, cartId }) => {
             </span>
           </div>
         </div>
-        <div className="card-footer d-flex flex-column align-items-start">
-          <h5 className="mb-2">${course.price}</h5>
-          <div className="mt-auto d-flex align-items-center">
-            <Button
-              onClick={() => addToCart(course.id, userId, course.price, country, cartId)}
-              type={'button'}
-              className={'text-inherit text-decoration-none btn btn-primary me-2'}
-            >
-              <i className="fas fa-shopping-cart text-primary align-middle text-white" />
-            </Button>
-            <Link to={`/course-detail/${course.slug}`} className="text-inherit text-decoration-none btn btn-primary">
-              Enroll Now <i className="fas fa-arrow-right text-primary align-middle text-white" />
-            </Link>
-          </div>
-        </div>
+
+
+        {isEnrolled ? (
+                <div className="card-footer d-flex flex-column align-items-start">
+                  <h5 className="mb-2 ">Already enrolled</h5>
+                  <div className="mt-auto d-flex align-items-center">
+                    <Link to={`/course-detail/${course.slug}`} className="text-inherit text-decoration-none btn btn-primary">
+                      Go to Course <i className="fas fa-arrow-right text-primary align-middle text-white" />
+                    </Link>
+                  </div>
+                </div>
+            )
+            :
+            (
+                <div className="card-footer d-flex flex-column align-items-start">
+                  <h5 className="mb-2">${course.price}</h5>
+                  <div className="mt-auto d-flex align-items-center">
+
+
+
+                    <Button
+                        onClick={() => addToCart(course.id, userId, course.price, country, cartId)}
+                        type={'button'}
+                        className={'text-inherit text-decoration-none btn btn-primary me-2'}
+                        disabled={isCourseInCart}
+
+                    >
+                      <i className="fas fa-shopping-cart text-primary align-middle text-white"/>
+                    </Button>
+
+
+                    {isCourseInCart ? (
+                            <Link to="/cart/"
+                                  className="text-inherit text-decoration-none btn btn-success">
+                              Go to cart <i className="fas fa-arrow-right text-primary align-middle text-white"/>
+                            </Link>
+                    )
+                    :
+                        (
+                            <Link to={`/course-detail/${course.slug}`}
+                                  className="text-inherit text-decoration-none btn btn-primary">
+                              Enroll Now <i className="fas fa-arrow-right text-primary align-middle text-white"/>
+                            </Link>
+                        )
+                    }
+
+                  </div>
+                </div>
+            )}
+
+
       </div>
     </div>
   );

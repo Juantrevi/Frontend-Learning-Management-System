@@ -213,10 +213,14 @@ export const getRefreshedToken = async () => {
 // Function to check if the access token is expired
 export const isAccessTokenExpired = (access_token) => {
     try {
+        if (!access_token) {
+            return true;
+        }
+
         const decodedToken = jwt_decode(access_token);
+
         return decodedToken.exp < Date.now() / 1000;
     } catch (error) {
-        console.log(error);
-        return true;
+        console.error("Error decoding access token:", error);
     }
 };
