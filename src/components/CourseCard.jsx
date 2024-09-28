@@ -150,7 +150,8 @@ const CourseCard = ({ course, userId, country, cartId }) => {
                     )
                     :
                         (
-                            <Link to={`/course-detail/${course.slug}`}
+                            <Link
+                                to={`/course-detail/${course.slug}`}
                                   className="text-inherit text-decoration-none btn btn-primary">
                               Enroll Now <i className="fas fa-arrow-right text-primary align-middle text-white"/>
                             </Link>

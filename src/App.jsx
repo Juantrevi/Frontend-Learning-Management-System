@@ -17,6 +17,8 @@ import CartId from "./views/plugin/CartId.js";
 import Checkout from "./views/base/Checkout.jsx";
 import Success from "./views/base/Success.jsx";
 import Search from "./views/base/Search.jsx";
+import ChangePassword from "./views/student/ChangePassword.jsx";
+import Profile from "./views/student/Profile.jsx";
 
 function App() {
 
@@ -48,6 +50,8 @@ function App() {
                     <Route path={'/checkout/:order_oid/'} element={<Checkout />} />
                     <Route path={'/payment-success/:order_oid/'} element={<Success />} />
                     <Route path={'/search/'} element={<Search />} />
+                    <Route path={'/student/change-password/'} element={<ChangePassword />} />
+                    <Route path={'/student/profile/'} element={<Profile />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

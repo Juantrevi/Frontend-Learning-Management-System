@@ -1060,7 +1060,9 @@ function CourseDetail() {
                                                                 </>
                                                                 ) : null}
                                                         </Button>
-                                                        <Link to="/cart/" className="btn btn-success mb-0 w-100">
+                                                        <Link
+                                                            onClick={() => addToCart(course?.id, userId, course.price, country, CartId())}
+                                                            to="/cart/" className="btn btn-success mb-0 w-100">
                                                             Enroll Now <i className='fas fa-arrow-right'></i>
                                                         </Link>
                                                     </div>
