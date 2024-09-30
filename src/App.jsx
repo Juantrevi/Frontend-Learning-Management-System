@@ -19,6 +19,7 @@ import Success from "./views/base/Success.jsx";
 import Search from "./views/base/Search.jsx";
 import ChangePassword from "./views/student/ChangePassword.jsx";
 import Profile from "./views/student/Profile.jsx";
+import Dashboard from "./views/student/Dashboard.jsx";
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
                     <Route path={'/search/'} element={<Search />} />
                     <Route path={'/student/change-password/'} element={<ChangePassword />} />
                     <Route path={'/student/profile/'} element={<Profile />} />
+                    <Route path={'/student/dashboard/'} element={<Dashboard />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

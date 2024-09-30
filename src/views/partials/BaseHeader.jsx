@@ -1,11 +1,17 @@
 import {useContext} from "react";
 import { Link } from "react-router-dom";
 import {CartContext} from "../plugin/Context.js";
+import {useAuthStore} from "../../store/auth.js";
 
 function BaseHeader() {
 
     const [cartCount, setCartCount] = useContext(CartContext)
+    const [isLoggedIn, user] = useAuthStore((state) => [
+        state.isLoggedIn,
+        state.user
+    ])
 
+    console.log(isLoggedIn())
 
     return (
         <div>
@@ -102,28 +108,39 @@ function BaseHeader() {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link className="dropdown-item d-flex align-items-center text-nowrap" to={`/student/dashboard/`}>
+                                        <Link className="dropdown-item d-flex align-items-center text-nowrap"
+                                              to={`/student/dashboard/`}>
                                             <i className="bi bi-grid-fill me-1 flex-shrink-0"></i> Dashboard
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item d-flex align-items-center text-nowrap" to={`/student/courses/`}>
+                                        <Link className="dropdown-item d-flex align-items-center text-nowrap"
+                                              to={`/student/courses/`}>
                                             <i className="fas fa-shopping-cart me-1 flex-shrink-0"></i> My Courses
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item d-flex align-items-center text-nowrap" to={`/student/wishlist/`}>
+                                        <Link className="dropdown-item d-flex align-items-center text-nowrap"
+                                              to={`/student/wishlist/`}>
                                             <i className="fas fa-heart me-1 flex-shrink-0"></i> Wishlist
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item d-flex align-items-center text-nowrap" to={`/student/question-answer/`}>
+                                        <Link className="dropdown-item d-flex align-items-center text-nowrap"
+                                              to={`/student/question-answer/`}>
                                             <i className="fas fa-envelope me-1 flex-shrink-0"></i> Q/A
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item d-flex align-items-center text-nowrap" to={`/student/profile/`}>
+                                        <Link className="dropdown-item d-flex align-items-center text-nowrap"
+                                              to={`/student/profile/`}>
                                             <i className="fas fa-gear me-1 flex-shrink-0"></i> Profile & Settings
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link className="dropdown-item d-flex align-items-center text-nowrap"
+                                              to={`/logout/`}>
+                                            <i className="fa-solid fa-door-open me-1 flex-shrink-0"></i> Log out
                                         </Link>
                                     </li>
                                 </ul>
@@ -140,15 +157,22 @@ function BaseHeader() {
                                 Search <i className="fas fa-search"></i>
                             </button>
                         </form>
-                        <Link to="/login/" className="btn btn-primary d-flex align-items-center text-nowrap ms-2" type="submit">
-                            Login <i className="fas fa-sign-in-alt"></i>
-                        </Link>
-                        <Link to="/register/" className="btn btn-primary d-flex align-items-center text-nowrap ms-2" type="submit">
-                            Register <i className="fas fa-user-plus"></i>
-                        </Link>
-                        <Link className="btn btn-success ms-2 d-flex align-items-center text-nowrap" to="/cart/">
-                            Cart ({cartCount}) <i className="fas fa-shopping-cart"></i>
-                        </Link>
+                        {isLoggedIn() ?
+                        <>
+                            <Link className="btn btn-success ms-2 d-flex align-items-center text-nowrap" to="/cart/">
+                                Cart ({cartCount}) <i className="ms-1 fas fa-shopping-cart"></i>
+                            </Link>
+                        </>
+                        :
+                        <>
+                            <Link to="/login/" className="btn btn-primary d-flex align-items-center text-nowrap ms-2" type="submit">
+                                Login <i className="ms-1 fas fa-sign-in-alt"></i>
+                            </Link>
+                            <Link to="/register/" className="btn btn-primary d-flex align-items-center text-nowrap ms-2" type="submit">
+                                Register <i className="ms-1 fas fa-user-plus"></i>
+                            </Link>
+                        </>
+                        }
                     </div>
                 </div>
             </nav>

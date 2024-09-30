@@ -53,10 +53,6 @@ function Index() {
         fetchCourse()
     }, []);
 
-    console.log(courses)
-    console.log(userStats)
-
-
     return (
         <>
             <BaseHeader />

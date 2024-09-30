@@ -1,7 +1,5 @@
-// src/components/CourseCard.jsx
 import React, {useContext, useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
-import Rater from 'react-rater';
 import 'react-rater/lib/react-rater.css';
 import Button from 'react-bootstrap/Button';
 import useAxios from "../utils/useAxios.js";
@@ -9,6 +7,7 @@ import Toast from "../views/plugin/Toast.js";
 import apiInstance from "../utils/axios.js";
 import CartId from "../views/plugin/CartId.js";
 import { CartContext } from "../views/plugin/Context.js";
+import RaterWrapper from "./Rater.jsx";
 
 const CourseCard = ({ course, userId, country, cartId }) => {
   const [cartCount, setCartCount] = useContext(CartContext);
@@ -104,7 +103,7 @@ const CourseCard = ({ course, userId, country, cartId }) => {
           <div className="lh-1 mt-3 d-flex">
             <span className="align-text-top">
               <span className="fs-6">
-                <Rater total={5} rating={course.average_rating || 0} />
+                <RaterWrapper total={5} rating={course.average_rating || 0} />
               </span>
               <span className="text-warning ms-1">{course.average_rating || 0}</span>
               <span className="fs-6 ms-2">({course.reviews?.length} Reviews)</span>
