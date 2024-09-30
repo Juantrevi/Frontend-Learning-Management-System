@@ -47,9 +47,8 @@ function Dashboard() {
                             <div className="row mb-4">
                                 <h4 className="mb-0 mb-4"> <i className='bi bi-grid-fill'></i> Dashboard</h4>
                                 {/* Counter item */}
-
-                                <div className="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                                    <div className="d-flex justify-content-center align-items-center p-4 bg-warning bg-opacity-10 rounded-3">
+                                <div className="col-sm-6 col-lg-4 mb-3 mb-lg-0 h-100">
+                                    <div className="db-card d-flex justify-content-center align-items-center p-4 bg-warning bg-opacity-10 rounded-3">
                                         <span className="display-6 lh-1 text-orange mb-0">
                                             <i className="fas fa-tv fa-fw" />
                                         </span>

@@ -144,7 +144,7 @@ function BaseHeader() {
                                 </ul>
                             </li>
                         </ul>
-                        <form className="d-flex align-items-center text-nowrap w-100" role="search">
+                        <form className="d-flex align-items-center text-nowrap w-100 mb-2 mb-lg-0" role="search">
                             <input
                                 className="form-control me-2 flex-grow-1"
                                 type="search"
@@ -156,20 +156,20 @@ function BaseHeader() {
                             </button>
                         </form>
                         {isLoggedIn() ?
-                        <>
-                            <Link className="btn btn-success ms-2 d-flex align-items-center text-nowrap" to="/cart/">
+                        <div className="d-flex flex-column flex-lg-row">
+                            <Link className="btn btn-success ms-0 ms-lg-2 mb-2 mb-lg-0 d-flex align-items-center justify-content-center flex-shrink-0" to="/cart/">
                                 Cart ({cartCount}) <i className="ms-1 fas fa-shopping-cart"></i>
                             </Link>
-                        </>
+                        </div>
                         :
-                        <>
-                            <Link to="/login/" className="btn btn-primary d-flex align-items-center text-nowrap ms-2" type="submit">
+                        <div className="d-flex flex-column flex-lg-row">
+                            <Link to="/login/" className="btn btn-primary ms-0 ms-lg-2 mb-2 mb-lg-0 d-flex align-items-center w-100" type="submit">
                                 Login <i className="ms-1 fas fa-sign-in-alt"></i>
                             </Link>
-                            <Link to="/register/" className="btn btn-primary d-flex align-items-center text-nowrap ms-2" type="submit">
+                            <Link to="/register/" className="btn btn-primary ms-0 ms-lg-2 mb-2 mb-lg-0 d-flex align-items-center w-100" type="submit">
                                 Register <i className="ms-1 fas fa-user-plus"></i>
                             </Link>
-                        </>
+                        </div>
                         }
                     </div>
                 </div>
