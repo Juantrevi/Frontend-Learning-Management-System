@@ -11,8 +11,6 @@ function BaseHeader() {
         state.user
     ])
 
-    console.log(isLoggedIn())
-
     return (
         <div>
             <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
