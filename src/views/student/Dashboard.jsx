@@ -16,15 +16,29 @@ function Dashboard() {
     const [fetching, setFetching] = useState(true)
 
     const fetchData = async () => {
+        setFetching(true)
         useAxios().get(`/student/summary/`).then((res) => {
             setStats(res.data[0])
-            console.log(res.data[0])
         })
 
         useAxios().get(`/student/enrolled-courses/`).then((res) => {
             setCourses(res.data)
-            console.log(res.data)
         })
+        setFetching(false)
+    }
+
+
+    const handleSearch = (event) => {
+        event.preventDefault()
+        const query = event.target.value.toLowerCase()
+        if (query === ''){
+            fetchData()
+        }else {
+            const filtered = courses.filter((c) => {
+                return c.course.title.toLowerCase().includes(query)
+            });
+            setCourses(filtered)
+        }
     }
 
     useEffect(() => {
@@ -90,97 +104,115 @@ function Dashboard() {
                                 </div>
                             </div>
 
-                            <div className="card mb-4">
-                                <div className="card-header">
-                                    <h3 className="mb-0">Courses</h3>
-                                    <span>
+                            {fetching === true && (
+                                <p className={'mt-3 p-3'}>Loading...</p>
+                            )}
+
+                            {fetching === false && (
+
+                                <div className="card mb-4">
+                                    <div className="card-header">
+                                        <h3 className="mb-0">Courses</h3>
+                                        <span>
                                         Start watching courses now from your dashboard page.
                                     </span>
-                                </div>
-                                <div className="card-body">
-                                    <form className="row gx-3">
-                                        <div className="col-lg-12 col-md-12 col-12 mb-lg-0 mb-2">
-                                            <input
-                                                type="search"
-                                                className="form-control"
-                                                placeholder="Search Your Courses"
-                                            />
-                                        </div>
-                                    </form>
-                                </div>
-                                <div className="table-responsive overflow-y-hidden">
-                                    <table className="table mb-0 text-nowrap table-hover table-centered text-nowrap">
-                                        <thead className="table-light">
+                                    </div>
+                                    <div className="card-body">
+                                        <form className="row gx-3">
+                                            <div className="col-lg-12 col-md-12 col-12 mb-lg-0 mb-2">
+                                                <input
+                                                    type="search"
+                                                    className="form-control"
+                                                    placeholder="Search Your Courses"
+                                                    onChange={handleSearch}
+                                                />
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div className="table-responsive overflow-y-hidden">
+                                        <table
+                                            className="table mb-0 text-nowrap table-hover table-centered text-nowrap">
+                                            <thead className="table-light">
                                             <tr>
                                                 <th>Courses</th>
                                                 <th>Date Enrolled</th>
                                                 <th>Lectures</th>
                                                 <th>Completed</th>
                                                 <th>Action</th>
-                                                <th />
+                                                <th/>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                        {courses.map((c, index) => (
-                                            <tr>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div>
-                                                            <a href="#">
-                                                                <img
-                                                                    src={c.course.image}
-                                                                    alt="course"
-                                                                    className="rounded img-4by3-lg"
-                                                                    style={{
-                                                                        width: "100px",
-                                                                        height: "100px",
-                                                                        borderRadius: "50%",
-                                                                        objectFit: "cover"
-                                                                    }}
-                                                                />
-                                                            </a>
-                                                        </div>
-                                                        <div className="ms-3">
-                                                            <h4 className="mb-1 h5">
-                                                                <a href="#"
-                                                                   className="text-inherit text-decoration-none text-dark">
-                                                                    {c.course.title}
+                                            </thead>
+                                            <tbody>
+                                            {courses.map((c, index) => (
+                                                <tr>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <div>
+                                                                <a href="#">
+                                                                    <img
+                                                                        src={c.course.image}
+                                                                        alt="course"
+                                                                        className="rounded img-4by3-lg"
+                                                                        style={{
+                                                                            width: "100px",
+                                                                            height: "100px",
+                                                                            borderRadius: "50%",
+                                                                            objectFit: "cover"
+                                                                        }}
+                                                                    />
                                                                 </a>
-                                                            </h4>
-                                                            <ul className="list-inline fs-6 mb-0">
-                                                                {/*<li className="list-inline-item">*/}
-                                                                {/*    <i className='bi bi-clock-history'></i>*/}
-                                                                {/*    <span className='ms-1'>1hr 30 Mins</span>*/}
-                                                                {/*</li>*/}
+                                                            </div>
+                                                            <div className="ms-3">
+                                                                <h4 className="mb-1 h5">
+                                                                    <a href="#"
+                                                                       className="text-inherit text-decoration-none text-dark">
+                                                                        {c.course.title}
+                                                                    </a>
+                                                                </h4>
+                                                                <ul className="list-inline fs-6 mb-0">
+                                                                    {/*<li className="list-inline-item">*/}
+                                                                    {/*    <i className='bi bi-clock-history'></i>*/}
+                                                                    {/*    <span className='ms-1'>1hr 30 Mins</span>*/}
+                                                                    {/*</li>*/}
 
-                                                                <li className="list-inline-item">
-                                                                    <i className='bi bi-translate'></i>
-                                                                    <span className='ms-1'>{c.course.language}</span>
-                                                                </li>
+                                                                    <li className="list-inline-item">
+                                                                        <i className='bi bi-translate'></i>
+                                                                        <span
+                                                                            className='ms-1'>{c.course.language}</span>
+                                                                    </li>
 
-                                                                <li className="list-inline-item">
-                                                                    <i className='bi bi-reception-4'></i>
-                                                                    <span className='ms-1'>{c.course.level}</span>
-                                                                </li>
-                                                            </ul>
+                                                                    <li className="list-inline-item">
+                                                                        <i className='bi bi-reception-4'></i>
+                                                                        <span className='ms-1'>{c.course.level}</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td><p className='mt-4'>{moment(c.date).format("D MMM, YYYY")}</p></td>
-                                                <td><p className='mt-4'>{c.lectures?.length}</p></td>
-                                                <td><p className='mt-4'>{c.completed_lesson?.length}</p></td>
-                                                <td>
-                                                    <button className={`btn btn-sm mt-4 ${c.completed_lesson?.length < 1 ? 'btn-success' : 'btn-primary'}`}>
-                                                        {c.completed_lesson?.length < 1 ? 'Start Course' : 'Continue Course'} <i className='ms-1 fas fa-arrow-right'></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td><p className='mt-4'>{moment(c.date).format("D MMM, YYYY")}</p>
+                                                    </td>
+                                                    <td><p className='mt-4'>{c.lectures?.length}</p></td>
+                                                    <td><p className='mt-4'>{c.completed_lesson?.length}</p></td>
+                                                    <td>
+                                                        <button
+                                                            className={`btn btn-sm mt-4 ${c.completed_lesson?.length < 1 ? 'btn-success' : 'btn-primary'}`}>
+                                                            {c.completed_lesson?.length < 1 ? 'Start Course' : 'Continue Course'}
+                                                            <i className='ms-1 fas fa-arrow-right'></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {courses.length < 1 && (
+                                                <p className={'mt-4 p-4'}>No courses found</p>
+                                            )}
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
+
                         </div>
                     </div>
                 </div>

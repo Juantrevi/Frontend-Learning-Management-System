@@ -5,6 +5,7 @@ import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 
 function Profile() {
+
   return (
     <>
       <BaseHeader />
