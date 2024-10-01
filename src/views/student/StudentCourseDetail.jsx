@@ -16,9 +16,17 @@ import useAxios from "../../utils/useAxios.js";
 
 function StudentCourseDetail() {
 
+  // Models for bootstrap START
+  const [course, setCourse] = useState([])
+  const param = useParams()
+  const [variantItem, setVariantItem] = useState(null)
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => { setShow(true); }
+  const handleShow = (variant_item) => {
+    setShow(true);
+    setVariantItem(variant_item)
+  }
 
   const [noteShow, setNoteShow] = useState(false);
   const handleNoteClose = () => setNoteShow(false);
@@ -28,10 +36,10 @@ function StudentCourseDetail() {
   const handleConversationClose = () => setConversationShow(false);
   const handleConversationShow = () => { setConversationShow(true); }
 
+  // Models for bootstrap END
 
 
-  const [course, setCourse] = useState([])
-  const param = useParams()
+
 
   const fetchCourseDetail = async () => {
     useAxios().get(`/student/course-detail/${param.enrollment_id}/`).then((res) => {
@@ -188,9 +196,11 @@ function StudentCourseDetail() {
                                               <>
                                                 <div className="d-flex justify-content-between align-items-center">
                                                   <div className="position-relative d-flex align-items-center justify-content-between w-100">
-                                                    <a href="#" className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                    <Button
+                                                        onClick={() => handleShow(l)}
+                                                        className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
                                                       <i className="fas fa-play me-0" />
-                                                    </a>
+                                                    </Button>
                                                     <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light flex-grow-1">
                                                       {l.title}
                                                     </span>
@@ -424,15 +434,19 @@ function StudentCourseDetail() {
 
 
       {/* Lecture Modal */}
-      <Modal show={null} size='lg' onHide={null}>
+      <Modal show={show} size='lg' onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Lesson: Lesson Title</Modal.Title>
+          <Modal.Title>Lesson: {variantItem?.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ReactPlayer url={`url-here`} controls playing width={"100%"} height={"100%"} />
+          <ReactPlayer url={variantItem?.file}
+                       controls
+                       playing
+                       width={"100%"}
+                       height={"100%"} />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={null}>Close</Button>
+          <Button variant="secondary" onClick={handleClose}>Close</Button>
         </Modal.Footer>
       </Modal>
 

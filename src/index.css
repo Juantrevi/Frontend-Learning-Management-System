@@ -96,3 +96,17 @@
     border-color: #008bf8;
     box-shadow: 0 4px 18px 0 #008bf8;
 }
+
+/*@media (max-width: 768px) {*/
+/*    .modal-body {*/
+/*        padding: 0;*/
+/*    }*/
+
+/*    .modal-content {*/
+/*        height: 100vh;*/
+/*    }*/
+
+/*    .react-player {*/
+/*        height: 100vh !important;*/
+/*    }*/
+/*}*/
