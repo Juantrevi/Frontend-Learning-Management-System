@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
+import {useParams} from "react-router-dom";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import ReactPlayer from 'react-player'
+
+
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
+import useAxios from "../../utils/useAxios.js";
 
-import ReactPlayer from 'react-player'
 
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 
-function CourseDetail() {
+
+function StudentCourseDetail() {
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -22,6 +27,22 @@ function CourseDetail() {
   const [ConversationShow, setConversationShow] = useState(false);
   const handleConversationClose = () => setConversationShow(false);
   const handleConversationShow = () => { setConversationShow(true); }
+
+
+
+  const [course, setCourse] = useState([])
+  const param = useParams()
+
+  const fetchCourseDetail = async () => {
+    useAxios().get(`/student/course-detail/${param.enrollment_id}/`).then((res) => {
+      setCourse(res.data)
+      console.log(res.data)
+    });
+  }
+
+  useEffect(() => {
+    fetchCourseDetail()
+  }, []);
 
   return (
     <>
@@ -136,192 +157,59 @@ function CourseDetail() {
                                   </div>
                                 </div>
                                 {/* Item */}
-                                <div className="accordion-item mb-3">
-                                  <h6 className="accordion-header font-base" id="heading-1">
-                                    <button
-                                      className="accordion-button fw-bold rounded d-sm-flex d-inline-block collapsed"
-                                      type="button"
-                                      data-bs-toggle="collapse"
-                                      data-bs-target="#collapse-1"
-                                      aria-expanded="true"
-                                      aria-controls="collapse-1"
-                                    >
-                                      Introduction of Digital Marketing
-                                      <span className="small ms-0 ms-sm-2">
-                                        (3 Lectures)
-                                      </span>
-                                    </button>
-                                  </h6>
-                                  <div
-                                    id="collapse-1"
-                                    className="accordion-collapse collapse show"
-                                    aria-labelledby="heading-1"
-                                    data-bs-parent="#accordionExample2"
-                                  >
-                                    <div className="accordion-body mt-3">
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <a
-                                            href="#"
-                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                          >
-                                            <i className="fas fa-play me-0" />
-                                          </a>
-                                          <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                            Introduction
-                                          </span>
-                                        </div>
-                                        <div className='d-flex'>
-                                          <p className="mb-0">3m 9s</p>
-                                          <input type="checkbox" className='form-check-input' name="" id="" />
-                                        </div>
-                                      </div>
-                                      <hr /> {/* Divider */}
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <a
-                                            href="#"
-                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                          >
-                                            <i className="fas fa-play me-0" />
-                                          </a>
-                                          <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
 
-                                            What is Digital Marketing What is Digital
-                                            Marketing
+                                {course?.curriculum?.map((c, index) => (
+                                    <div className="accordion-item mb-3 bg-light p-3">
+                                      <h6 className="accordion-header font-base" id="heading-1">
+                                        <button
+                                            className="accordion-button p-3 w-100 bg-light btn border fw-bold rounded d-sm-flex d-inline-block collapsed"
+                                            type="button"
+                                            data-bs-toggle={`collapse`}
+                                            data-bs-target={`#collapse-${c.variant_id}`}
+                                            aria-expanded="true"
+                                            aria-controls={`collapse-${c.variant_id}`}
+                                        >
+                                          {c.title}
+                                          <span className="small ms-0 ms-sm-2">
+                                            ({c.variant_items?.length > 1 ? `${c.variant_items?.length} Lectures` : `${c.variant_items?.length} Lecture`})
                                           </span>
+                                        </button>
+                                      </h6>
+                                      <div
+                                          id={`collapse-${c.variant_id}`}
+                                          className="accordion-collapse collapse show"
+                                          aria-labelledby="heading-1"
+                                          data-bs-parent="#accordionExample2"
+                                      >
+                                        <div className="accordion-body mt-3">
+                                          {/* Course lecture */}
+
+                                          {c.variant_items?.map((l, index) => (
+                                              <>
+                                                <div className="d-flex justify-content-between align-items-center">
+                                                  <div className="position-relative d-flex align-items-center justify-content-between w-100">
+                                                    <a href="#" className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                      <i className="fas fa-play me-0" />
+                                                    </a>
+                                                    <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light flex-grow-1">
+                                                      {l.title}
+                                                    </span>
+                                                    <div className="d-flex align-items-center ms-2">
+                                                      <p className="mb-0 flex-shrink-0">{l?.content_duration || '0m 0s'}</p>
+                                                      <input type="checkbox" className="form-check-input ms-2" name="" id="" />
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <hr/>
+                                              </>
+                                          ))}
+
+                                          {/* Divider */}
+
                                         </div>
-                                        <p className="mb-0 text-truncate">15m 10s</p>
-                                      </div>
-                                      <hr /> {/* Divider */}
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <a
-                                            href="#"
-                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                          >
-                                            <i className="fas fa-lock me-0" />
-                                          </a>
-                                          <span className="d-inline-block text-truncate text-muted ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                            Type of Digital Marketing
-                                          </span>
-                                        </div>
-                                        <p className="mb-0">18m 10s</p>
                                       </div>
                                     </div>
-                                  </div>
-                                </div>
-                                {/* Item */}
-                                <div className="accordion-item mb-3">
-                                  <h6 className="accordion-header font-base" id="heading-2">
-                                    <button
-                                      className="accordion-button fw-bold collapsed rounded d-sm-flex d-inline-block"
-                                      type="button"
-                                      data-bs-toggle="collapse"
-                                      data-bs-target="#collapse-2"
-                                      aria-expanded="false"
-                                      aria-controls="collapse-2"
-                                    >
-                                      Customer Life cycle
-                                      <span className="small ms-0 ms-sm-2">
-                                        (4 Lectures)
-                                      </span>
-                                    </button>
-                                  </h6>
-                                  <div
-                                    id="collapse-2"
-                                    className="accordion-collapse collapse"
-                                    aria-labelledby="heading-2"
-                                    data-bs-parent="#accordionExample2"
-                                  >
-                                    {/* Accordion body START */}
-                                    <div className="accordion-body mt-3">
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <a
-                                            href="#"
-                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                          >
-                                            <i className="fas fa-play me-0" />
-                                          </a>
-                                          <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                            What is Digital Marketing
-                                          </span>
-                                        </div>
-                                        <p className="mb-0">11m 20s</p>
-                                      </div>
-                                      <hr /> {/* Divider */}
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <a
-                                            href="#"
-                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                          >
-                                            <i className="fas fa-play me-0" />
-                                          </a>
-                                          <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                            15 Tips for Writing Magnetic Headlines
-                                          </span>
-                                        </div>
-                                        <p className="mb-0 text-truncate">25m 20s</p>
-                                      </div>
-                                      <hr /> {/* Divider */}
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <a
-                                            href="#"
-                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                          >
-                                            <i className="fas fa-play me-0" />
-                                          </a>
-                                          <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                            How to Write Like Your Customers Talk
-                                          </span>
-                                        </div>
-                                        <p className="mb-0">11m 30s</p>
-                                      </div>
-                                      <hr /> {/* Divider */}
-                                      {/* Course lecture */}
-                                      <div className="d-flex justify-content-between align-items-center">
-                                        <div className="position-relative d-flex align-items-center">
-                                          <div>
-                                            <a
-                                              href="#"
-                                              className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                              data-bs-toggle="modal"
-                                              data-bs-target="#exampleModal"
-                                            >
-                                              <i className="fas fa-play me-0" />
-                                            </a>
-                                          </div>
-                                          <div className="row g-sm-0 align-items-center">
-                                            <div className="col-sm-6">
-                                              <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-md-400px">
-                                                How to Flip Features Into Benefits
-                                              </span>
-                                            </div>
-                                            <div className="col-sm-6">
-                                              <span className="badge text-bg-orange ms-2 ms-md-0">
-                                                <i className="fas fa-lock fa-fw me-1" />
-                                                Premium
-                                              </span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <p className="mb-0 d-inline-block text-truncate w-70px w-sm-60px">
-                                          35m 30s
-                                        </p>
-                                      </div>
-                                    </div>
-                                    {/* Accordion body END */}
-                                  </div>
-                                </div>
+                                ))}
 
 
                               </div>
@@ -329,27 +217,30 @@ function CourseDetail() {
                             </div>
 
                             <div
-                              className="tab-pane fade"
-                              id="course-pills-2"
-                              role="tabpanel"
-                              aria-labelledby="course-pills-tab-2"
+                                className="tab-pane fade"
+                                id="course-pills-2"
+                                role="tabpanel"
+                                aria-labelledby="course-pills-tab-2"
                             >
                               <div className="card">
                                 <div className="card-header border-bottom p-0 pb-3">
                                   <div className="d-sm-flex justify-content-between align-items-center">
                                     <h4 className="mb-0 p-3">All Notes</h4>
                                     {/* Add Note Modal */}
-                                    <button type="button" className="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+                                    <button type="button" className="btn btn-primary me-3" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal">
                                       Add Note <i className='fas fa-pen'></i>
                                     </button>
-                                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div className="modal fade" id="exampleModal" tabIndex={-1}
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                       <div className="modal-dialog modal-dialog-centered">
                                         <div className="modal-content">
                                           <div className="modal-header">
                                             <h5 className="modal-title" id="exampleModalLabel">
                                               Add New Note <i className='fas fa-pen'></i>
                                             </h5>
-                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+                                            <button type="button" className="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"/>
                                           </div>
                                           <div className="modal-body">
                                             <form>
@@ -357,13 +248,14 @@ function CourseDetail() {
                                                 <label htmlFor="exampleInputEmail1" className="form-label">
                                                   Note Title
                                                 </label>
-                                                <input type="text" className="form-control" />
+                                                <input type="text" className="form-control"/>
                                               </div>
                                               <div className="mb-3">
                                                 <label htmlFor="exampleInputPassword1" className="form-label">
                                                   Note Content
                                                 </label>
-                                                <textarea className='form-control' name="" id="" cols="30" rows="10"></textarea>
+                                                <textarea className='form-control' name="" id="" cols="30"
+                                                          rows="10"></textarea>
                                               </div>
                                               <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal" ><i className='fas fa-arrow-left'></i> Close</button>
                                               <button type="submit" className="btn btn-primary">Save Note <i className='fas fa-check-circle'></i></button>
@@ -699,4 +591,4 @@ function CourseDetail() {
   )
 }
 
-export default CourseDetail
+export default StudentCourseDetail

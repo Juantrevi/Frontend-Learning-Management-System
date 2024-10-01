@@ -21,6 +21,7 @@ import ChangePassword from "./views/student/ChangePassword.jsx";
 import Profile from "./views/student/Profile.jsx";
 import StudentDashboard from "./views/student/StudentDashboard.jsx";
 import StudentCourses from "./views/student/StudentCourses.jsx";
+import StudentCourseDetail from "./views/student/StudentCourseDetail.jsx";
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
                     <Route path={'/student/profile/'} element={<Profile />} />
                     <Route path={'/student/dashboard/'} element={<StudentDashboard />} />
                     <Route path={'/student/courses/'} element={<StudentCourses />} />
+                    <Route path={'/student/courses/:enrollment_id'} element={<StudentCourseDetail />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

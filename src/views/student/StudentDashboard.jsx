@@ -194,11 +194,12 @@ function StudentDashboard() {
                                                     <td><p className='mt-4'>{c.lectures?.length}</p></td>
                                                     <td><p className='mt-4'>{c.completed_lesson?.length}</p></td>
                                                     <td>
-                                                        <button
+                                                        <Link
+                                                            to={`/student/courses/${c.enrollment_id}`}
                                                             className={`btn btn-sm mt-4 ${c.completed_lesson?.length < 1 ? 'btn-success' : 'btn-primary'}`}>
                                                             {c.completed_lesson?.length < 1 ? 'Start Course' : 'Continue Course'}
                                                             <i className='ms-1 fas fa-arrow-right'></i>
-                                                        </button>
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             ))}
