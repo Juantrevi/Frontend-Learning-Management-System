@@ -56,7 +56,7 @@ function Search() {
             <div className="row mb-5 mt-3">
               <div className="col-12">
                 <div className="mb-6">
-                  <h2 className="mb-1 h1">Featured Courses</h2>
+                  <h2 className="mb-1 h1">Featured StudentCourses</h2>
                 </div>
               </div>
               <div className="row">
@@ -64,7 +64,7 @@ function Search() {
                   <input
                       type="text"
                       className="form-control lg mt-3"
-                      placeholder="Search Courses..."
+                      placeholder="Search StudentCourses..."
                       onChange={(e) => {
                         const query = e.target.value.toLowerCase();
                         if (query === '') {

@@ -5,7 +5,7 @@ import Header from './Partials/Header'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 
-function Dashboard() {
+function TeacherDashboard() {
     return (
         <>
             <BaseHeader />
@@ -31,7 +31,7 @@ function Dashboard() {
                                             <div className="d-flex">
                                                 <h5 className="purecounter mb-0 fw-bold" >0</h5>
                                             </div>
-                                            <p className="mb-0 h6 fw-light">Total Courses</p>
+                                            <p className="mb-0 h6 fw-light">Total StudentCourses</p>
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@ function Dashboard() {
 
                             <div className="card mb-4">
                                 <div className="card-header">
-                                    <h3 className="mb-0">Courses</h3>
+                                    <h3 className="mb-0">StudentCourses</h3>
                                     <span>
                                         Manage your courses from here, earch, view, edit or delete courses.
                                     </span>
@@ -78,7 +78,7 @@ function Dashboard() {
                                             <input
                                                 type="search"
                                                 className="form-control"
-                                                placeholder="Search Your Courses"
+                                                placeholder="Search Your StudentCourses"
                                             />
                                         </div>
                                     </form>
@@ -87,7 +87,7 @@ function Dashboard() {
                                     <table className="table mb-0 text-nowrap table-hover table-centered text-nowrap">
                                         <thead className="table-light">
                                             <tr>
-                                                <th>Courses</th>
+                                                <th>StudentCourses</th>
                                                 <th>Enrolled</th>
                                                 <th>Level</th>
                                                 <th>Status</th>
@@ -204,4 +204,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard
+export default TeacherDashboard

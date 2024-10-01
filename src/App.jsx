@@ -19,7 +19,8 @@ import Success from "./views/base/Success.jsx";
 import Search from "./views/base/Search.jsx";
 import ChangePassword from "./views/student/ChangePassword.jsx";
 import Profile from "./views/student/Profile.jsx";
-import Dashboard from "./views/student/Dashboard.jsx";
+import StudentDashboard from "./views/student/StudentDashboard.jsx";
+import StudentCourses from "./views/student/StudentCourses.jsx";
 
 function App() {
 
@@ -53,7 +54,8 @@ function App() {
                     <Route path={'/search/'} element={<Search />} />
                     <Route path={'/student/change-password/'} element={<ChangePassword />} />
                     <Route path={'/student/profile/'} element={<Profile />} />
-                    <Route path={'/student/dashboard/'} element={<Dashboard />} />
+                    <Route path={'/student/dashboard/'} element={<StudentDashboard />} />
+                    <Route path={'/student/courses/'} element={<StudentCourses />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

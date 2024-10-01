@@ -59,7 +59,7 @@ function BaseHeader() {
                                     </li>
                                     <li>
                                         <Link className="dropdown-item d-flex align-items-center text-nowrap" to={`/instructor/courses/`}>
-                                            <i className="fas fa-shopping-cart me-1 flex-shrink-0"></i> My Courses
+                                            <i className="fas fa-shopping-cart me-1 flex-shrink-0"></i> My StudentCourses
                                         </Link>
                                     </li>
                                     <li>
@@ -114,7 +114,7 @@ function BaseHeader() {
                                     <li>
                                         <Link className="dropdown-item d-flex align-items-center text-nowrap"
                                               to={`/student/courses/`}>
-                                            <i className="fas fa-shopping-cart me-1 flex-shrink-0"></i> My Courses
+                                            <i className="fas fa-shopping-cart me-1 flex-shrink-0"></i> My StudentCourses
                                         </Link>
                                     </li>
                                     <li>
@@ -148,8 +148,8 @@ function BaseHeader() {
                             <input
                                 className="form-control me-2 flex-grow-1"
                                 type="search"
-                                placeholder="Search Courses"
-                                aria-label="Search Courses"
+                                placeholder="Search StudentCourses"
+                                aria-label="Search StudentCourses"
                             />
                             <button className="btn btn-outline-success flex-shrink-0" type="submit">
                                 Search <i className="fas fa-search"></i>

@@ -5,7 +5,7 @@ import Header from './Partials/Header'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 
-function Courses() {
+function StudentCourses() {
     return (
         <>
             <BaseHeader />
@@ -19,7 +19,7 @@ function Courses() {
                         <Sidebar />
                         <div className="col-lg-9 col-md-8 col-12">
                             <div className="row mb-4">
-                                <h4 className="mb-0 mb-2 mt-4"> <i className='bi bi-grid-fill'></i> Courses</h4>
+                                <h4 className="mb-0 mb-2 mt-4"> <i className='bi bi-grid-fill'></i> StudentCourses</h4>
                             </div>
                             <div className="card mb-4">
                                 <div className="card-header">
@@ -33,7 +33,7 @@ function Courses() {
                                             <input
                                                 type="search"
                                                 className="form-control"
-                                                placeholder="Search Your Courses"
+                                                placeholder="Search Your StudentCourses"
                                             />
                                         </div>
                                     </form>
@@ -42,7 +42,7 @@ function Courses() {
                                     <table className="table mb-0 text-nowrap table-hover table-centered text-nowrap">
                                         <thead className="table-light">
                                             <tr>
-                                                <th>Courses</th>
+                                                <th>StudentCourses</th>
                                                 <th>Enrolled</th>
                                                 <th>Level</th>
                                                 <th>Status</th>
