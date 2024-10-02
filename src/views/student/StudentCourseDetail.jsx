@@ -10,6 +10,7 @@ import BaseFooter from '../partials/BaseFooter'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 import useAxios from "../../utils/useAxios.js";
+import UserData from "../plugin/UserData.js";
 
 
 
@@ -20,6 +21,8 @@ function StudentCourseDetail() {
   const [course, setCourse] = useState([])
   const param = useParams()
   const [variantItem, setVariantItem] = useState(null)
+  const [completionPercentage, setCompletionPercentage] = useState(0)
+  const [markAsCompletedStatus, setMarkAsCompletedStatus] = useState({})
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -44,9 +47,32 @@ function StudentCourseDetail() {
   const fetchCourseDetail = async () => {
     useAxios().get(`/student/course-detail/${param.enrollment_id}/`).then((res) => {
       setCourse(res.data)
-      console.log(res.data)
+      const percentageCompleted = (res.data.completed_lesson.length/res.data.lectures.length*100)
+      setCompletionPercentage(percentageCompleted?.toFixed(0))
     });
+  };
+
+  const handleMarkLessonAsCompleted = (variantItemId) => {
+    const key = `lecture_${variantItemId}`
+    setMarkAsCompletedStatus({
+      ...markAsCompletedStatus,
+      [key]: 'Updating'
+    })
+
+    const formData = new FormData()
+    formData.append(['course_id'], course.course?.id)
+    formData.append(['variant_item_id'], variantItemId)
+
+    useAxios().post(`student/course-completed/`, formData).then((res) => {
+      fetchCourseDetail()
+      setMarkAsCompletedStatus({
+        ...markAsCompletedStatus,
+        [key]: 'Updated'
+      })
+    })
+
   }
+
 
   useEffect(() => {
     fetchCourseDetail()
@@ -151,18 +177,19 @@ function StudentCourseDetail() {
                                 className="accordion accordion-icon accordion-border"
                                 id="accordionExample2"
                               >
-
+                                {completionPercentage}%
                                 <div className="progress mb-3">
                                   <div
                                     className="progress-bar"
                                     role="progressbar"
-                                    style={{ width: `${25}%` }}
-                                    aria-valuenow={25}
+                                    style={{ width: `${completionPercentage}%` }}
+                                    aria-valuenow={completionPercentage}
                                     aria-valuemin={0}
                                     aria-valuemax={100}
                                   >
-                                    25%
+
                                   </div>
+
                                 </div>
                                 {/* Item */}
 
@@ -198,15 +225,27 @@ function StudentCourseDetail() {
                                                   <div className="position-relative d-flex align-items-center justify-content-between w-100">
                                                     <Button
                                                         onClick={() => handleShow(l)}
-                                                        className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                        className="btn btn-danger-soft btn-round btn-sm mb-0  position-static">
                                                       <i className="fas fa-play me-0" />
                                                     </Button>
-                                                    <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light flex-grow-1">
+                                                    <span
+                                                        className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light flex-grow-1"
+                                                        onClick={() => handleShow(l)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
                                                       {l.title}
                                                     </span>
                                                     <div className="d-flex align-items-center ms-2">
                                                       <p className="mb-0 flex-shrink-0">{l?.content_duration || '0m 0s'}</p>
-                                                      <input type="checkbox" className="form-check-input ms-2" name="" id="" />
+
+                                                      <input
+                                                          onChange={() => handleMarkLessonAsCompleted(l.variant_item_id)}
+                                                          checked={course.completed_lesson?.some((cl) => cl.variant_item.id === l.id)}
+                                                          type="checkbox"
+                                                          className="form-check-input ms-2"
+                                                          name=""
+                                                          id="" />
+
                                                     </div>
                                                   </div>
                                                 </div>
