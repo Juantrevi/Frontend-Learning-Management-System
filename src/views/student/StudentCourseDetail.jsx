@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ReactPlayer from 'react-player'
+import Toast from "../plugin/Toast.js";
 
 
 import BaseHeader from '../partials/BaseHeader'
@@ -23,6 +24,7 @@ function StudentCourseDetail() {
   const [variantItem, setVariantItem] = useState(null)
   const [completionPercentage, setCompletionPercentage] = useState(0)
   const [markAsCompletedStatus, setMarkAsCompletedStatus] = useState({})
+  const [createNewNote, setCreateNote] = useState({title: "", note: ""})
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -72,6 +74,37 @@ function StudentCourseDetail() {
     })
 
   }
+
+  const handleNoteChange = (event) => {
+    setCreateNote({
+      ...createNewNote,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const handleSubmitCreateNote = async (e) => {
+    e.preventDefault()
+    const formData = new FormData()
+
+    formData.append(['enrollment_id'], param.enrollment_id)
+    formData.append(['title'], createNewNote.title)
+    formData.append(['note'], createNewNote.note)
+
+    try {
+      await useAxios().post(`/student/course-note/${param.enrollment_id}/`, formData).then((res) => {
+        fetchCourseDetail()
+        Toast().fire({
+          icon: "success",
+          title: "Note created successfully!"
+        })
+        setCreateNote({ title: "", note: "" });
+      })
+    }catch (e){
+      console.log(e)
+    }
+  }
+
+
 
 
   useEffect(() => {
@@ -292,22 +325,35 @@ function StudentCourseDetail() {
                                                     aria-label="Close"/>
                                           </div>
                                           <div className="modal-body">
-                                            <form>
+                                            <form onSubmit={handleSubmitCreateNote}>
                                               <div className="mb-3">
                                                 <label htmlFor="exampleInputEmail1" className="form-label">
                                                   Note Title
                                                 </label>
-                                                <input type="text" className="form-control"/>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name={'title'}
+                                                    onChange={handleNoteChange}
+                                                />
                                               </div>
                                               <div className="mb-3">
                                                 <label htmlFor="exampleInputPassword1" className="form-label">
                                                   Note Content
                                                 </label>
-                                                <textarea className='form-control' name="" id="" cols="30"
-                                                          rows="10"></textarea>
+                                                <textarea
+                                                    className='form-control'
+                                                    id=""
+                                                    cols="30"
+                                                    rows="10"
+                                                    name={'note'}
+                                                    onChange={handleNoteChange}
+                                                >
+
+                                                </textarea>
                                               </div>
-                                              <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal" ><i className='fas fa-arrow-left'></i> Close</button>
-                                              <button type="submit" className="btn btn-primary">Save Note <i className='fas fa-check-circle'></i></button>
+                                              <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal"><i className='fas fa-arrow-left'></i> Close</button>
+                                              <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Save Note <i className='fas fa-check-circle'></i></button>
                                             </form>
                                           </div>
                                         </div>
