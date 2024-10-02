@@ -25,6 +25,7 @@ function StudentCourseDetail() {
   const [completionPercentage, setCompletionPercentage] = useState(0)
   const [markAsCompletedStatus, setMarkAsCompletedStatus] = useState({})
   const [createNewNote, setCreateNote] = useState({title: "", note: ""})
+  const [selectedNote, setSelectedNote] = useState(null)
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -35,7 +36,10 @@ function StudentCourseDetail() {
 
   const [noteShow, setNoteShow] = useState(false);
   const handleNoteClose = () => setNoteShow(false);
-  const handleNoteShow = () => { setNoteShow(true); }
+  const handleNoteShow = (note) => {
+    setNoteShow(true);
+
+  }
 
   const [ConversationShow, setConversationShow] = useState(false);
   const handleConversationClose = () => setConversationShow(false);
@@ -363,40 +367,36 @@ function StudentCourseDetail() {
                                 </div>
                                 <div className="card-body p-0 pt-3">
                                   {/* Note item start */}
-                                  <div className="row g-4 p-3">
-                                    <div className="col-sm-11 col-xl-11 shadow p-3 m-3 rounded">
-                                      <h5> What is Digital Marketing What is Digital Marketing</h5>
-                                      <p>
-                                        Arranging rapturous did believe him all had supported.
-                                        Supposing so be resolving breakfast am or perfectly.
-                                        It drew a hill from me. Valley by oh twenty direct me
-                                        so. Departure defective arranging rapturous did
-                                        believe him all had supported. Family months lasted
-                                        simple set nature vulgar him. Picture for attempt joy
-                                        excited ten carried manners talking how. Family months
-                                        lasted simple set nature vulgar him. Picture for
-                                        attempt joy excited ten carried manners talking how.
-                                      </p>
-                                      {/* Buttons */}
-                                      <div className="hstack gap-3 flex-wrap">
-                                        <a onClick={handleNoteShow} className="btn btn-success mb-0">
-                                          <i className="bi bi-pencil-square me-2" /> Edit
-                                        </a>
-                                        <a href="#" className="btn btn-danger mb-0">
-                                          <i className="bi bi-trash me-2" /> Delete
-                                        </a>
+                                  {course.note.map((n, index) => (
+                                      <div className="row g-4 p-3">
+                                        <div className="col-sm-11 col-xl-11 shadow p-3 m-3 rounded">
+                                          <h5> {n.title}</h5>
+                                          <p>
+                                            {n.note}
+                                          </p>
+                                          {/* Buttons */}
+                                          <div className="hstack gap-3 flex-wrap">
+                                            <a onClick={handleNoteShow} className="btn btn-success mb-0">
+                                              <i className="bi bi-pencil-square me-2"/> Edit
+                                            </a>
+                                            <a href="#" className="btn btn-danger mb-0">
+                                              <i className="bi bi-trash me-2"/> Delete
+                                            </a>
+                                          </div>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </div>
-                                  <hr />
+                                  ))}
+
+
+                                  <hr/>
                                 </div>
                               </div>
                             </div>
                             <div
-                              className="tab-pane fade"
-                              id="course-pills-3"
-                              role="tabpanel"
-                              aria-labelledby="course-pills-tab-3"
+                                className="tab-pane fade"
+                                id="course-pills-3"
+                                role="tabpanel"
+                                aria-labelledby="course-pills-tab-3"
                             >
                               <div className="card">
                                 {/* Card header */}
@@ -407,17 +407,20 @@ function StudentCourseDetail() {
                                     {/* Search */}
                                     <div className="col-sm-6 col-lg-9">
                                       <div className="position-relative">
-                                        <input className="form-control pe-5 bg-transparent" type="search" placeholder="Search" aria-label="Search" />
-                                        <button className="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
-                                          <i className="fas fa-search fs-6 " />
+                                        <input className="form-control pe-5 bg-transparent" type="search"
+                                               placeholder="Search" aria-label="Search"/>
+                                        <button
+                                            className="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset"
+                                            type="submit">
+                                          <i className="fas fa-search fs-6 "/>
                                         </button>
                                       </div>
                                     </div>
                                     <div className="col-sm-6 col-lg-3">
                                       <a
-                                        href="#"
-                                        className="btn btn-primary mb-0 w-100"
-                                        data-bs-toggle="modal"
+                                          href="#"
+                                          className="btn btn-primary mb-0 w-100"
+                                          data-bs-toggle="modal"
                                         data-bs-target="#modalCreatePost"
                                       >
                                         Ask Question
