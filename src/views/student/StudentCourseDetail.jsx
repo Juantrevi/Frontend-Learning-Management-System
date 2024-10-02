@@ -38,6 +38,7 @@ function StudentCourseDetail() {
   const handleNoteClose = () => setNoteShow(false);
   const handleNoteShow = (note) => {
     setNoteShow(true);
+    setSelectedNote(note)
 
   }
 
@@ -83,6 +84,7 @@ function StudentCourseDetail() {
     setCreateNote({
       ...createNewNote,
       [event.target.name]: event.target.value
+
     })
   }
 
@@ -109,6 +111,24 @@ function StudentCourseDetail() {
   }
 
 
+  const handleSubmitForEditNote = (e, noteId) => {
+    e.preventDefault()
+    const formData = new FormData()
+
+    formData.append(['enrollment_id'], param.enrollment_id)
+    formData.append(['title'], createNewNote.title || selectedNote?.title)
+    formData.append(['note'], createNewNote.note || selectedNote?.note)
+
+    useAxios().patch(`/student/course-note-detail/${param.enrollment_id}/${noteId}/`, formData).then((res) => {
+      fetchCourseDetail()
+      console.log(res.data)
+      Toast().fire({
+        icon: "info",
+        title: "Note updated successfully"
+      })
+      setCreateNote({ title: "", note: "" });
+    })
+  }
 
 
   useEffect(() => {
@@ -367,7 +387,8 @@ function StudentCourseDetail() {
                                 </div>
                                 <div className="card-body p-0 pt-3">
                                   {/* Note item start */}
-                                  {course.note.map((n, index) => (
+
+                                  {course?.note?.map((n, index) => (
                                       <div className="row g-4 p-3">
                                         <div className="col-sm-11 col-xl-11 shadow p-3 m-3 rounded">
                                           <h5> {n.title}</h5>
@@ -376,7 +397,7 @@ function StudentCourseDetail() {
                                           </p>
                                           {/* Buttons */}
                                           <div className="hstack gap-3 flex-wrap">
-                                            <a onClick={handleNoteShow} className="btn btn-success mb-0">
+                                            <a onClick={() => handleNoteShow(n)} className="btn btn-success mb-0">
                                               <i className="bi bi-pencil-square me-2"/> Edit
                                             </a>
                                             <a href="#" className="btn btn-danger mb-0">
@@ -542,20 +563,31 @@ function StudentCourseDetail() {
       {/* Note Edit Modal */}
       <Modal show={noteShow} size='lg' onHide={handleNoteClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Note: Note Title</Modal.Title>
+          <Modal.Title>Note: {selectedNote?.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form>
+          <form onSubmit={(e) => handleSubmitForEditNote(e, selectedNote?.note_id)}>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Note Title</label>
-              <input defaultValue={null} name='title' type="text" className="form-control" />
+              <input
+                  onChange={handleNoteChange}
+                  defaultValue={selectedNote?.title}
+                  name='title'
+                  type="text"
+                  className="form-control" />
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputPassword1" className="form-label">Note Content</label>
-              <textarea onChange={null} defaultValue={null} name='note' className='form-control' cols="30" rows="10"></textarea>
+              <textarea
+                  onChange={handleNoteChange}
+                  defaultValue={selectedNote?.note}
+                  name='note'
+                  className='form-control'
+                  cols="30"
+                  rows="10"></textarea>
             </div>
-            <button type="button" className="btn btn-secondary me-2" onClick={null}><i className='fas fa-arrow-left'></i> Close</button>
-            <button type="submit" className="btn btn-primary">Save Note <i className='fas fa-check-circle'></i></button>
+            <button type="button" className="btn btn-secondary me-2" onClick={handleNoteClose}><i className='fas fa-arrow-left'></i> Close</button>
+            <button type="submit" className="btn btn-primary" >Save Note <i className='fas fa-check-circle'></i></button>
           </form>
         </Modal.Body>
       </Modal>
