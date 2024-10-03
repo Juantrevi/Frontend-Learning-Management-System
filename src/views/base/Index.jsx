@@ -75,28 +75,30 @@ function Index() {
                                     Grow your skills and advance career
                                 </h1>
                                 {/* para */}
-                                <p className="pe-lg-10 mb-5">
+                                <p className="pe-lg-10 mb-3">
                                     Start, switch, or advance your career with more than 5,000
                                     courses, Professional Certificates, and degrees from world-class
                                     universities and companies.
                                 </p>
                                 {/* btn */}
-                                <a href="#" className="btn btn-primary fs-4 text-inherit ms-3">
-                                    Join Free Now <i className='fas fa-plus'></i>
-                                </a>
-                                <a
-                                    href="https://www.youtube.com/watch?v=Nfzi7034Kbg"
-                                    className="btn btn-outline-success fs-4 text-inherit ms-3"
-                                >
+                                    <a href="#" className="btn btn-primary fs-4 text-inherit ms-3 mt-2 mb-2">
+                                        Join Free Now <i className='fas fa-plus'></i>
+                                    </a>
+                                    <a
+                                        href="https://www.youtube.com/watch?v=Nfzi7034Kbg"
+                                        className="btn btn-outline-success fs-4 text-inherit ms-3 mt-2 mb-2"
+                                    >
 
-                                    Watch Demo <i className='fas fa-video'></i>
-                                </a>
+                                        Watch Demo <i className='fas fa-video'></i>
+                                    </a>
+
+
                             </div>
                         </div>
                         {/* col */}
                         <div className="col-lg-6 d-flex justify-content-center">
                             {/* images */}
-                            <div className="position-relative">
+                            <div className="position-relative ">
                                 <img
                                     src="https://geeksui.codescandy.com/geeks/assets/images/background/acedamy-img/girl-image.png"
                                     alt="girl"
