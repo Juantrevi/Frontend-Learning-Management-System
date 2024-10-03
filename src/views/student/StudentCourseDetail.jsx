@@ -130,6 +130,17 @@ function StudentCourseDetail() {
     })
   }
 
+  const handleDeleteNote = (noteId) => {
+    useAxios().delete(`/student/course-note-detail/${param.enrollment_id}/${noteId}/`).then((res) => {
+      fetchCourseDetail()
+      console.log(res.data)
+      Toast().fire({
+        icon: "warning",
+        title: "Note Deleted"
+      })
+    })
+  }
+
 
   useEffect(() => {
     fetchCourseDetail()
@@ -388,25 +399,45 @@ function StudentCourseDetail() {
                                 <div className="card-body p-0 pt-3">
                                   {/* Note item start */}
 
-                                  {course?.note?.map((n, index) => (
-                                      <div className="row g-4 p-3">
-                                        <div className="col-sm-11 col-xl-11 shadow p-3 m-3 rounded">
-                                          <h5> {n.title}</h5>
-                                          <p>
-                                            {n.note}
-                                          </p>
-                                          {/* Buttons */}
-                                          <div className="hstack gap-3 flex-wrap">
-                                            <a onClick={() => handleNoteShow(n)} className="btn btn-success mb-0">
-                                              <i className="bi bi-pencil-square me-2"/> Edit
-                                            </a>
-                                            <a href="#" className="btn btn-danger mb-0">
-                                              <i className="bi bi-trash me-2"/> Delete
-                                            </a>
-                                          </div>
+                                  {course?.note?.length < 1 ?
+                                      <>
+                                        <div className={'p-4'}>
+                                        <p >There are no notes for this course. <br></br>
+                                          <button type="button" className="btn btn-primary mt-3" data-bs-toggle="modal"
+                                                  data-bs-target="#exampleModal">
+                                            Add Note  <i className='fas fa-pen'></i>
+                                          </button>
+                                        </p>
                                         </div>
-                                      </div>
-                                  ))}
+
+                                      </>
+                                      :
+                                      <>
+                                        {course?.note?.map((n, index) => (
+                                            <div className="row g-4 p-3">
+                                              <div className="col-sm-11 col-xl-11 shadow p-3 m-3 rounded">
+                                                <h5> {n.title}</h5>
+                                                <p>
+                                                  {n.note}
+                                                </p>
+                                                {/* Buttons */}
+                                                <div className="hstack gap-3 flex-wrap">
+                                                  <a onClick={() => handleNoteShow(n)} className="btn btn-success mb-0">
+                                                    <i className="bi bi-pencil-square me-2"/> Edit
+                                                  </a>
+                                                  <a
+                                                      className="btn btn-danger mb-0"
+                                                      onClick={() => handleDeleteNote(n.note_id)}
+                                                  >
+                                                    <i className="bi bi-trash me-2"/> Delete
+                                                  </a>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        ))}
+                                      </>
+                                  }
+
 
 
                                   <hr/>
