@@ -12,6 +12,7 @@ import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 import useAxios from "../../utils/useAxios.js";
 import UserData from "../plugin/UserData.js";
+import moment from "moment";
 
 
 
@@ -27,6 +28,8 @@ function StudentCourseDetail() {
   const [createNewNote, setCreateNote] = useState({title: "", note: ""})
   const [selectedNote, setSelectedNote] = useState(null)
   const [createMessage, setCreateMessage] = useState({title: '', message: ''})
+  const [questions, setQuestions] = useState([])
+  const [selectedConversation, setSelectedConversation] = useState(null)
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -45,7 +48,11 @@ function StudentCourseDetail() {
 
   const [ConversationShow, setConversationShow] = useState(false);
   const handleConversationClose = () => setConversationShow(false);
-  const handleConversationShow = () => { setConversationShow(true); }
+  const handleConversationShow = (conversation) => {
+    setConversationShow(true);
+    setSelectedConversation(conversation)
+
+  }
 
   const [addQuestionShow, setAddQuestionShow] = useState(false)
   const handleQuestionClose = () => {setAddQuestionShow(false)}
@@ -59,6 +66,7 @@ function StudentCourseDetail() {
   const fetchCourseDetail = async () => {
     useAxios().get(`/student/course-detail/${param.enrollment_id}/`).then((res) => {
       setCourse(res.data)
+      setQuestions(res.data.question_answer)
       const percentageCompleted = (res.data.completed_lesson.length/res.data.lectures.length*100)
       setCompletionPercentage(percentageCompleted?.toFixed(0))
     });
@@ -128,7 +136,6 @@ function StudentCourseDetail() {
 
     useAxios().patch(`/student/course-note-detail/${param.enrollment_id}/${noteId}/`, formData).then((res) => {
       fetchCourseDetail()
-      console.log(res.data)
       Toast().fire({
         icon: "info",
         title: "Note updated successfully"
@@ -516,39 +523,50 @@ function StudentCourseDetail() {
                                 {/* Card body */}
                                 <div className="card-body p-0 pt-3">
                                   <div className="vstack gap-3 p-3">
+
                                     {/* Question item START */}
-                                    <div className="shadow rounded-3 p-3">
-                                      <div className="d-sm-flex justify-content-sm-between mb-3">
-                                        <div className="d-flex align-items-center">
-                                          <div className="avatar avatar-sm flex-shrink-0">
-                                            <img
-                                              src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg"
-                                              className="avatar-img rounded-circle"
-                                              alt="avatar"
-                                              style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
-                                            />
+                                    {questions?.map((q, index) => (
+                                        <div className="shadow rounded-3 p-3" key={index}>
+                                          <div className="d-sm-flex justify-content-sm-between mb-3">
+                                            <div className="d-flex align-items-center">
+                                              <div className="avatar avatar-sm flex-shrink-0">
+                                                <img
+                                                    src={q.profile.image}
+                                                    className="avatar-img rounded-circle"
+                                                    alt="avatar"
+                                                    style={{
+                                                      width: "60px",
+                                                      height: "60px",
+                                                      borderRadius: "50%",
+                                                      objectFit: "cover"
+                                                    }}
+                                                />
+                                              </div>
+                                              <div className="ms-2">
+                                                <h6 className="mb-0">
+                                                  <a href="#" className='text-decoration-none text-dark'>{q.profile.full_name}</a>
+                                                </h6>
+                                                <small>{moment(q.date).format("DD MMM, YYYY")}</small>
+                                              </div>
+                                            </div>
                                           </div>
-                                          <div className="ms-2">
-                                            <h6 className="mb-0">
-                                              <a href="#" className='text-decoration-none text-dark'>Angelina Poi</a>
-                                            </h6>
-                                            <small>Asked 10 Hours ago</small>
-                                          </div>
+                                          <h5>{q.title}</h5>
+                                          <button className='btn btn-primary btn-sm mb-3 mt-3'
+                                                  onClick={() => {handleConversationShow(q)}}>Join Conversation <i
+                                              className='fas fa-arrow-right'></i></button>
                                         </div>
-                                      </div>
-                                      <h5>How can i fix this bug?</h5>
-                                      <button className='btn btn-primary btn-sm mb-3 mt-3' onClick={handleConversationShow}>Join Conversation <i className='fas fa-arrow-right'></i></button>
-                                    </div>
+                                    ))}
+
 
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <div
-                              className="tab-pane fade"
-                              id="course-pills-4"
-                              role="tabpanel"
-                              aria-labelledby="course-pills-tab-4"
+                                className="tab-pane fade"
+                                id="course-pills-4"
+                                role="tabpanel"
+                                aria-labelledby="course-pills-tab-4"
                             >
                               <div className="card">
                                 {/* Card header */}
@@ -561,8 +579,8 @@ function StudentCourseDetail() {
                                       {/* Rating */}
                                       <div className="col-12 bg-light-input">
                                         <select
-                                          id="inputState2"
-                                          className="form-select js-choice"
+                                            id="inputState2"
+                                            className="form-select js-choice"
                                         >
                                           <option value={1}>★☆☆☆☆ (1/5)</option>
                                           <option value={2}>★★☆☆☆ (2/5)</option>
@@ -658,126 +676,60 @@ function StudentCourseDetail() {
       {/* Conversation Modal */}
       <Modal show={ConversationShow} size='lg' onHide={handleConversationClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Lesson: 123</Modal.Title>
+          <Modal.Title>Lesson: {selectedConversation?.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="border p-2 p-sm-4 rounded-3">
             <ul className="list-unstyled mb-0" style={{ overflowY: "scroll", height: "500px" }}>
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    {/* Comment by */}
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account
-                          </p>
+
+              {selectedConversation?.messages?.map((m, index) => (
+                  <li className="comment-item mb-3">
+                    <div className="d-flex">
+                      <div className="avatar avatar-sm flex-shrink-0">
+                        <a href="#">
+                          <img className="avatar-img rounded-circle"
+                               src={m?.profile?.image}
+                               style={{width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover"}}
+                               alt="womans image"/>
+                        </a>
+                      </div>
+                      <div className="ms-2">
+                        {/* Comment by */}
+                        <div className="bg-light p-3 rounded w-100">
+                          <div className="d-flex w-100 justify-content-center">
+                            <div className="me-2 ">
+                              <h6 className="mb-1 lead fw-bold">
+                                <a href="#!" className='text-decoration-none text-dark'> {m?.profile?.full_name} </a><br/>
+                                <span style={{fontSize: "12px", color: "gray"}}>{moment(m.date).format('DD MMM, YYYY')} - {moment(m.date).fromNow()}</span>
+                              </h6>
+                              <p className="mb-0 mt-3  ">{m?.message}
+                              </p>
+                            </div>
+                          </div>
                         </div>
+
                       </div>
                     </div>
+                  </li>
+              ))}
 
-                  </div>
-                </div>
-              </li>
 
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    {/* Comment by */}
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account from the debby building in a hall  town tak with
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </li>
-
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    {/* Comment by */}
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </li>
-
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    {/* Comment by */}
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </li>
             </ul>
 
             <form class="w-100 d-flex">
-              <textarea name='message' class="one form-control pe-4 bg-light w-75" id="autoheighttextarea" rows="2" placeholder="What's your question?"></textarea>
-              <button class="btn btn-primary ms-2 mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i></button>
+              <textarea name='message' class="one form-control pe-4 bg-light w-75" id="autoheighttextarea" rows="2"
+                        placeholder="Answer"></textarea>
+              <button class="btn btn-primary ms-2 mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i>
+              </button>
             </form>
 
-            <form class="w-100">
-              <input name='title' type="text" className="form-control mb-2" placeholder='Question Title' />
-              <textarea name='message' class="one form-control pe-4 mb-2 bg-light" id="autoheighttextarea" rows="5" placeholder="What's your question?"></textarea>
-              <button class="btn btn-primary mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i></button>
-            </form>
+            {/*<form class="w-100">*/}
+            {/*  <input name='title' type="text" className="form-control mb-2" placeholder='Question Title'/>*/}
+            {/*  <textarea name='message' class="one form-control pe-4 mb-2 bg-light" id="autoheighttextarea" rows="5"*/}
+            {/*            placeholder="What's your question?"></textarea>*/}
+            {/*  <button class="btn btn-primary mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i>*/}
+            {/*  </button>*/}
+            {/*</form>*/}
 
           </div>
         </Modal.Body>
