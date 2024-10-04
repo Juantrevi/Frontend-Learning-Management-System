@@ -81,16 +81,17 @@ function Index() {
                                     universities and companies.
                                 </p>
                                 {/* btn */}
-                                    <a href="#" className="btn btn-primary fs-4 text-inherit ms-3 mt-2 mb-2">
+                                <div className={'p-1 d-flex gap-2 flex-column flex-lg-row p-lg-3'}>
+                                    <a href="#" className="btn btn-primary fs-4 text-inherit">
                                         Join Free Now <i className='fas fa-plus'></i>
                                     </a>
                                     <a
                                         href="https://www.youtube.com/watch?v=Nfzi7034Kbg"
-                                        className="btn btn-outline-success fs-4 text-inherit ms-3 mt-2 mb-2"
+                                        className="btn btn-outline-success fs-4 text-inherit"
                                     >
-
                                         Watch Demo <i className='fas fa-video'></i>
                                     </a>
+                                </div>
 
 
                             </div>
@@ -126,7 +127,7 @@ function Index() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6 col-lg-3 border-top-md border-top border-end-lg">
+                        <div className="col-md-6 col-lg-3 border-top-md border-top pb-4 border-end-lg">
                             {/* icon */}
                             <div className="py-7 text-center">
                                 <div className="mb-3">
@@ -139,7 +140,7 @@ function Index() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6 col-lg-3 border-top-lg border-top border-end-md">
+                        <div className="col-md-6 col-lg-3 border-top-lg border-top border-end-md pb-4">
                             {/* icon */}
                             <div className="py-7 text-center">
                                 <div className="mb-3">

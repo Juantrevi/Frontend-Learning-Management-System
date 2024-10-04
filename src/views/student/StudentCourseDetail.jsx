@@ -26,6 +26,7 @@ function StudentCourseDetail() {
   const [markAsCompletedStatus, setMarkAsCompletedStatus] = useState({})
   const [createNewNote, setCreateNote] = useState({title: "", note: ""})
   const [selectedNote, setSelectedNote] = useState(null)
+  const [createMessage, setCreateMessage] = useState({title: '', message: ''})
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -45,6 +46,10 @@ function StudentCourseDetail() {
   const [ConversationShow, setConversationShow] = useState(false);
   const handleConversationClose = () => setConversationShow(false);
   const handleConversationShow = () => { setConversationShow(true); }
+
+  const [addQuestionShow, setAddQuestionShow] = useState(false)
+  const handleQuestionClose = () => {setAddQuestionShow(false)}
+  const handleQuestionShow = () => {setAddQuestionShow(true)}
 
   // Models for bootstrap END
 
@@ -87,6 +92,8 @@ function StudentCourseDetail() {
 
     })
   }
+
+
 
   const handleSubmitCreateNote = async (e) => {
     e.preventDefault()
@@ -138,6 +145,32 @@ function StudentCourseDetail() {
         icon: "warning",
         title: "Note Deleted"
       })
+    })
+  }
+
+  const handleMessageChange = (event) => {
+    setCreateMessage({
+      ...createMessage,
+      [event.target.name]: event.target.value
+
+    })
+  }
+
+  const handleSaveQuestion = async (e) => {
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append(['course_id'], course.course?.id)
+    formData.append(['title'], createMessage.title)
+    formData.append(['message'], createMessage.message)
+
+    await useAxios().post(`/student/question-answer-list-create/${course.course?.id}/`, formData).then((res) => {
+      console.log(res.data)
+      fetchCourseDetail()
+      Toast().fire({
+        icon: "info",
+        title: res.data.message
+      })
+      setCreateMessage({ title: "", message: "" });
     })
   }
 
@@ -470,7 +503,7 @@ function StudentCourseDetail() {
                                     </div>
                                     <div className="col-sm-6 col-lg-3">
                                       <a
-                                          href="#"
+                                          onClick={handleQuestionShow}
                                           className="btn btn-primary mb-0 w-100"
                                           data-bs-toggle="modal"
                                         data-bs-target="#modalCreatePost"
@@ -590,7 +623,6 @@ function StudentCourseDetail() {
         </Modal.Footer>
       </Modal>
 
-
       {/* Note Edit Modal */}
       <Modal show={noteShow} size='lg' onHide={handleNoteClose}>
         <Modal.Header closeButton>
@@ -623,7 +655,7 @@ function StudentCourseDetail() {
         </Modal.Body>
       </Modal>
 
-      {/* Note Edit Modal */}
+      {/* Conversation Modal */}
       <Modal show={ConversationShow} size='lg' onHide={handleConversationClose}>
         <Modal.Header closeButton>
           <Modal.Title>Lesson: 123</Modal.Title>
@@ -748,6 +780,38 @@ function StudentCourseDetail() {
             </form>
 
           </div>
+        </Modal.Body>
+      </Modal>
+
+      {/*Ask question Modal*/}
+      <Modal show={addQuestionShow} size='lg' onHide={handleQuestionClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Ask Question</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSaveQuestion}>
+            <div className="mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">Title</label>
+              <input
+                  onChange={handleMessageChange}
+                  value={createMessage.title}
+                  name='title'
+                  type="text"
+                  className="form-control" />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">Question</label>
+              <textarea
+                  onChange={handleMessageChange}
+                  value={createMessage.message}
+                  name='message'
+                  className='form-control'
+                  cols="30"
+                  rows="10"></textarea>
+            </div>
+            <button type="button" className="btn btn-secondary me-2" onClick={handleQuestionClose}><i className='fas fa-arrow-left'></i> Close</button>
+            <button type="submit" className="btn btn-primary" onClick={handleQuestionClose} >Save Question <i className='fas fa-check-circle'></i></button>
+          </form>
         </Modal.Body>
       </Modal>
 
