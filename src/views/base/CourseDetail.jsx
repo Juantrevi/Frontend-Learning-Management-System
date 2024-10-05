@@ -71,7 +71,7 @@ function CourseDetail() {
                     icon: 'success'
                 });
 
-                apiInstance.get(`course/cart-list/${CartId()}`).then((res) => {
+                useAxios().get(`course/cart-list/${CartId()}`).then((res) => {
                     setCartCount(res.data?.length)
                 })
 
