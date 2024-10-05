@@ -28,6 +28,7 @@ function Index() {
                 .get(`/course/best-courses/`)
                 .then((res) => {
                 setCourses(res.data)
+                    console.log(courses)
                 setIsLoading(false)
             });
         }catch (e){

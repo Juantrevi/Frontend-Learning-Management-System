@@ -22,6 +22,7 @@ import Profile from "./views/student/Profile.jsx";
 import StudentDashboard from "./views/student/StudentDashboard.jsx";
 import StudentCourses from "./views/student/StudentCourses.jsx";
 import StudentCourseDetail from "./views/student/StudentCourseDetail.jsx";
+import Wishlist from "./views/student/Wishlist.jsx";
 
 function App() {
 
@@ -58,6 +59,7 @@ function App() {
                     <Route path={'/student/dashboard/'} element={<StudentDashboard />} />
                     <Route path={'/student/courses/'} element={<StudentCourses />} />
                     <Route path={'/student/courses/:enrollment_id'} element={<StudentCourseDetail />} />
+                    <Route path={'/student/wishlist/'} element={<Wishlist />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

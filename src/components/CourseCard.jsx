@@ -95,18 +95,18 @@ const CourseCard = ({ course, userId, country, cartId }) => {
             </Link>
           </h4>
           <div className="text-truncate">
-            <small>By: {course.teacher.full_name}</small> <br />
+            <small>By: {course?.teacher?.full_name}</small> <br />
           </div>
           <small>
-            {course.students?.length} {course.students?.length > 1 ? 'Students' : 'Student'}
+            {course.students?.length} {course?.students?.length > 1 ? 'Students' : 'Student'}
           </small> <br />
           <div className="lh-1 mt-3 d-flex">
             <span className="align-text-top">
               <span className="fs-6">
-                <RaterWrapper total={5} rating={course.average_rating || 0} />
+                <RaterWrapper total={5} rating={course?.average_rating || 0} />
               </span>
-              <span className="text-warning ms-1">{course.average_rating || 0}</span>
-              <span className="fs-6 ms-2">({course.reviews?.length} Reviews)</span>
+              <span className="text-warning ms-1">{course?.average_rating || 0}</span>
+              <span className="fs-6 ms-2">({course?.reviews?.length} Reviews)</span>
             </span>
           </div>
         </div>
@@ -116,7 +116,7 @@ const CourseCard = ({ course, userId, country, cartId }) => {
                 <div className="card-footer d-flex flex-column align-items-start">
                   <h5 className="mb-2 ">Already enrolled</h5>
                   <div className="mt-auto d-flex align-items-center">
-                    <Link to={`/course-detail/${course.slug}`} className="text-inherit text-decoration-none btn btn-primary">
+                    <Link to={`/course-detail/${course?.slug}`} className="text-inherit text-decoration-none btn btn-primary">
                       Go to Course <i className="fas fa-arrow-right text-primary align-middle text-white" />
                     </Link>
                   </div>
@@ -125,7 +125,7 @@ const CourseCard = ({ course, userId, country, cartId }) => {
             :
             (
                 <div className="card-footer d-flex flex-column align-items-start">
-                  <h5 className="mb-2">${course.price}</h5>
+                  <h5 className="mb-2">${course?.price}</h5>
                   <div className="mt-auto d-flex align-items-center">
 
 

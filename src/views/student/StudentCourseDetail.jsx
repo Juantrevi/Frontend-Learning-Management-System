@@ -105,8 +105,6 @@ function StudentCourseDetail() {
     })
   }
 
-
-
   const handleSubmitCreateNote = async (e) => {
     e.preventDefault()
     const formData = new FormData()
@@ -128,7 +126,6 @@ function StudentCourseDetail() {
       console.log(e)
     }
   }
-
 
   const handleSubmitForEditNote = (e, noteId) => {
     e.preventDefault()
@@ -184,7 +181,6 @@ function StudentCourseDetail() {
     })
   }
 
-
   const sendNewMessage = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -236,7 +232,7 @@ function StudentCourseDetail() {
         icon: 'info',
         title: 'Review updated successfully'
       })
-      setCreateReview({'rating': 1, 'review': ''})
+
     })
   }
 
@@ -254,15 +250,14 @@ function StudentCourseDetail() {
         icon: 'info',
         title: 'Review updated'
       })
-      fetchCourseDetail()
     })
+
   }
 
 
   useEffect(() => {
     fetchCourseDetail()
   }, []);
-
 
   useEffect(() => {
     if(lastElementRef.current){
@@ -271,7 +266,13 @@ function StudentCourseDetail() {
   }, [selectedConversation]);
 
   useEffect(() => {
-}, [studentReview]);
+    if (studentReview?.id) {
+      setCreateReview({
+        rating: studentReview.rating,
+        review: studentReview.review
+      });
+    }
+  }, [studentReview]);
 
   return (
     <>
@@ -680,7 +681,7 @@ function StudentCourseDetail() {
                                                 className="form-select js-choice"
                                                 onChange={handleReviewChange}
                                                 name={'rating'}
-                                                value={createReview.rating || studentReview?.rating}
+                                                value={createReview.rating}
                                             >
                                               <option value={1}>★☆☆☆☆ (1/5)</option>
                                               <option value={2}>★★☆☆☆ (2/5)</option>
