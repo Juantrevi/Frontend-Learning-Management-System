@@ -13,6 +13,7 @@ const CourseCard = ({ course, userId, country, cartId }) => {
   const [cartCount, setCartCount] = useContext(CartContext);
   const [userStats, setUserStats] = useState([])
   const [cart, setCart] = useState([])
+  const [wishList, setWishList] = useState([])
 
 
   const addToCart = async (courseId, userId, price, country, cartId) => {
@@ -64,6 +65,21 @@ const CourseCard = ({ course, userId, country, cartId }) => {
     }
   };
 
+  const addToWishList = (courseId) => {
+    const formData = new FormData()
+    formData.append('course_id', courseId)
+
+    useAxios().post(`/student/wishlist/`, formData).then((res) => {
+      console.log(res.data)
+      Toast().fire({
+        icon: res.data.icon,
+        title: res.data.message
+      })
+    })
+
+  }
+
+
   useEffect(() => {
     fetchUserStats()
     fetchCartItems()
@@ -71,6 +87,7 @@ const CourseCard = ({ course, userId, country, cartId }) => {
 
   const isEnrolled = userStats[0]?.enrolled_course_ids?.includes(course.id);
   const isCourseInCart = cart.some(cartItem => cartItem.course.id === course.id);
+  const isCourseInWishList = userStats[0]?.wishlist_course_id?.includes(course.id);
 
 
   return (
@@ -85,9 +102,15 @@ const CourseCard = ({ course, userId, country, cartId }) => {
               <span className="badge bg-info">{course.level}</span>
               <span className="badge bg-success ms-2">{course.language}</span>
             </div>
-            <a href="#" className="fs-5">
-              <i className="fas fa-heart text-danger align-middle" />
-            </a>
+            {isCourseInWishList ? (
+                <a onClick={() => addToWishList(course?.id)} className="fs-5">
+                  <i className="fas fa-heart text-danger align-middle" style={{ cursor: 'pointer' }}/>
+                </a>
+            ) : (
+                <a onClick={() => addToWishList(course?.id)} className="fs-5">
+                  <i className="far fa-heart text-danger align-middle" style={{ cursor: 'pointer' }}/>
+                </a>
+            )}
           </div>
           <h4 className="card-title mb-2">
             <Link to={`/course-detail/${course.slug}`} className="text-inherit text-decoration-none text-dark fs-5">
