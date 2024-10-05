@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import {useParams} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -60,7 +60,7 @@ function StudentCourseDetail() {
 
   // Models for bootstrap END
 
-
+  const lastElementRef = useRef()
 
 
   const fetchCourseDetail = async () => {
@@ -147,7 +147,6 @@ function StudentCourseDetail() {
   const handleDeleteNote = (noteId) => {
     useAxios().delete(`/student/course-note-detail/${param.enrollment_id}/${noteId}/`).then((res) => {
       fetchCourseDetail()
-      console.log(res.data)
       Toast().fire({
         icon: "warning",
         title: "Note Deleted"
@@ -182,9 +181,36 @@ function StudentCourseDetail() {
   }
 
 
+  const sendNewMessage = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append(['course_id'], course.course?.id);
+    formData.append(['message'], createMessage.message);
+    formData.append(['qa_id'], selectedConversation?.qa_id);
+
+    try {
+      await useAxios().post(`/student/question-answer-message-create/`, formData).then((res) => {
+        setSelectedConversation(res.data.question);
+        // Reset the message input
+        setCreateMessage({ ...createMessage, message: "" });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+
+
   useEffect(() => {
     fetchCourseDetail()
   }, []);
+
+
+  useEffect(() => {
+    if(lastElementRef.current){
+      lastElementRef.current.scrollIntoView({behavior: 'smooth'})
+    }
+  }, [selectedConversation]);
 
   return (
     <>
@@ -622,8 +648,6 @@ function StudentCourseDetail() {
         </div>
       </section>
 
-
-
       {/* Lecture Modal */}
       <Modal show={show} size='lg' onHide={handleClose}>
         <Modal.Header closeButton>
@@ -688,7 +712,11 @@ function StudentCourseDetail() {
                       <div className="avatar avatar-sm flex-shrink-0">
                         <a href="#">
                           <img className="avatar-img rounded-circle"
-                               src={m?.profile?.image}
+                               src={m?.profile?.image?.startsWith('http://localhost:8000')
+                                   ?
+                                   m.profile.image
+                                   :
+                                   `http://localhost:8000${m.profile.image}`}
                                style={{width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover"}}
                                alt="womans image"/>
                         </a>
@@ -713,15 +741,32 @@ function StudentCourseDetail() {
                   </li>
               ))}
 
+              <div ref={lastElementRef}>
+
+              </div>
 
             </ul>
 
-            <form class="w-100 d-flex">
-              <textarea name='message' class="one form-control pe-4 bg-light w-75" id="autoheighttextarea" rows="2"
-                        placeholder="Answer"></textarea>
-              <button class="btn btn-primary ms-2 mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i>
-              </button>
-            </form>
+              <form className="w-100 d-flex" onSubmit={sendNewMessage}>
+                <textarea
+                  name="message"
+                  className="one form-control pe-4 bg-light w-75"
+                  onChange={handleMessageChange}
+                  value={createMessage.message}
+                  id="autoheighttextarea"
+                  rows="2"
+                  placeholder="Answer"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      sendNewMessage(e);
+                    }
+                  }}
+                />
+                <button className="btn btn-primary ms-2 mb-0 w-25" type="submit">
+                  Post <i className="fas fa-paper-plane"></i>
+                </button>
+              </form>
 
             {/*<form class="w-100">*/}
             {/*  <input name='title' type="text" className="form-control mb-2" placeholder='Question Title'/>*/}
