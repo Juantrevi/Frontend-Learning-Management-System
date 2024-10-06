@@ -75,10 +75,10 @@ const CourseCard = ({ course, userId, country, cartId }) => {
         icon: res.data.icon,
         title: res.data.message
       })
+      fetchUserStats()
     })
 
   }
-
 
   useEffect(() => {
     fetchUserStats()
