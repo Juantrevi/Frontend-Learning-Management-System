@@ -1,10 +1,92 @@
-import React from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
+import {useEffect, useState} from "react";
+import useAxios from "../../utils/useAxios.js";
+import Toast from "../plugin/Toast.js";
 
-function Profile() {
+function StudentProfile() {
+
+  const [profile, setProfile] = useState([])
+  const [profileData, setProfileData] = useState({
+    image: '',
+    full_name: '',
+    about: '',
+    country: '',
+  })
+  const [imagePreview, setImagePreview] = useState('')
+
+  const fetchProfile = () => {
+    useAxios().get(`/user/profile/`).then((res) => {
+      setProfile(res.data)
+      setProfileData(res.data)
+      setImagePreview(res.data.image)
+    })
+  }
+
+  const handleProfileChange = (event) => {
+    setProfileData({
+      ...profileData,
+      [event.target.name]: event.target.value
+    })
+    console.log(profileData)
+  }
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0]
+    setProfileData({
+      ...profileData,
+      [event.target.name]: selectedFile
+    })
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setImagePreview(reader.result)
+    }
+
+    if(selectedFile){
+      reader.readAsDataURL(selectedFile)
+    }
+
+    console.log(selectedFile)
+  }
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault()
+
+    const res = await useAxios().get(`/user/profile/`)
+    const formData = new FormData()
+
+    if(profileData.image && profileData.image !== res.data.image){
+      formData.append('image', profileData.image)
+    }
+
+    formData.append('full_name', profileData.full_name)
+    formData.append('about', profileData.about)
+    formData.append('country', profileData.country)
+
+    await useAxios().patch(`/user/profile/`, formData, {
+      headers: {
+        'Content-Type': "multipart/form-data"
+      }
+    }).then((res) => {
+      Toast().fire({
+        title: 'Profile updated',
+        icon: "info"
+      })
+      console.log(profileData.full_name)
+      fetchProfile()
+    })
+
+  }
+
+
+  useEffect(() => {
+    fetchProfile()
+  }, []);
+
+
 
   return (
     <>
@@ -28,11 +110,11 @@ function Profile() {
                   </p>
                 </div>
                 {/* Card body */}
-                <form className="card-body">
+                <form className="card-body" onSubmit={handleFormSubmit}>
                   <div className="d-lg-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center mb-4 mb-lg-0">
                       <img
-                        src="https://eduport.webestica.com/assets/images/avatar/09.jpg"
+                        src={imagePreview}
                         id="img-uploaded"
                         className="avatar-xl rounded-circle"
                         alt="avatar"
@@ -43,7 +125,12 @@ function Profile() {
                         <p className="mb-0">
                           PNG or JPG no bigger than 800px wide and tall.
                         </p>
-                        <input type="file" className='form-control mt-3' name="" id="" />
+                        <input
+                            onChange={handleFileChange}
+                            type="file"
+                            className='form-control mt-3'
+                            name="image"
+                            id="" />
                       </div>
                     </div>
                   </div>
@@ -59,21 +146,31 @@ function Profile() {
                           Full Name
                         </label>
                         <input
+                          onChange={handleProfileChange}
+                          name={'full_name'}
                           type="text"
-                          id="fname"
+                          id=""
                           className="form-control"
-                          placeholder="First Name"
+                          value={profileData.full_name}
                           required=""
                         />
-                        <div className="invalid-feedback">Please enter first name.</div>
+                        {/*<div className="invalid-feedback">Please enter first name.</div>*/}
                       </div>
-                      {/* Last name */}
+                      {/* About Me */}
                       <div className="mb-3 col-12 col-md-12">
                         <label className="form-label" htmlFor="lname">
                           About Me
                         </label>
-                        <textarea name="" id="" cols="30" rows="5" className='form-control'></textarea>
-                        <div className="invalid-feedback">Please enter last name.</div>
+                        <textarea
+                            defaultValue={profileData.about}
+                            onChange={handleProfileChange}
+                            name="about"
+                            placeholder="About me"
+                            id=""
+                            cols="30"
+                            rows="5"
+                            className='form-control'></textarea>
+                        {/*<div className="invalid-feedback">Please enter last name.</div>*/}
                       </div>
 
                       {/* Country */}
@@ -83,7 +180,10 @@ function Profile() {
                         </label>
                         <input
                           type="text"
+                          onChange={handleProfileChange}
+                          name={'country'}
                           id="country"
+                          defaultValue={profileData.country}
                           className="form-control"
                           placeholder="Country"
                           required=""
@@ -111,4 +211,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default StudentProfile

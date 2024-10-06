@@ -18,7 +18,7 @@ import Checkout from "./views/base/Checkout.jsx";
 import Success from "./views/base/Success.jsx";
 import Search from "./views/base/Search.jsx";
 import ChangePassword from "./views/student/ChangePassword.jsx";
-import Profile from "./views/student/Profile.jsx";
+import StudentProfile from "./views/student/StudentProfile.jsx";
 import StudentDashboard from "./views/student/StudentDashboard.jsx";
 import StudentCourses from "./views/student/StudentCourses.jsx";
 import StudentCourseDetail from "./views/student/StudentCourseDetail.jsx";
@@ -55,7 +55,7 @@ function App() {
                     <Route path={'/payment-success/:order_oid/'} element={<Success />} />
                     <Route path={'/search/'} element={<Search />} />
                     <Route path={'/student/change-password/'} element={<ChangePassword />} />
-                    <Route path={'/student/profile/'} element={<Profile />} />
+                    <Route path={'/student/profile/'} element={<StudentProfile />} />
                     <Route path={'/student/dashboard/'} element={<StudentDashboard />} />
                     <Route path={'/student/courses/'} element={<StudentCourses />} />
                     <Route path={'/student/courses/:enrollment_id'} element={<StudentCourseDetail />} />
