@@ -2,13 +2,14 @@ import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 import useAxios from "../../utils/useAxios.js";
 import Toast from "../plugin/Toast.js";
+import {ProfileContext} from "../plugin/Context.js";
 
 function StudentProfile() {
 
-  const [profile, setProfile] = useState([])
+  const [profile, setProfile] = useContext(ProfileContext)
   const [profileData, setProfileData] = useState({
     image: '',
     full_name: '',
@@ -16,6 +17,8 @@ function StudentProfile() {
     country: '',
   })
   const [imagePreview, setImagePreview] = useState('')
+
+
 
   const fetchProfile = () => {
     useAxios().get(`/user/profile/`).then((res) => {
