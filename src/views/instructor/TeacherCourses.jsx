@@ -5,7 +5,7 @@ import Header from './Partials/Header'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 
-function StudentCourses() {
+function TeacherCourses() {
     return (
         <>
             <BaseHeader />
@@ -159,4 +159,4 @@ function StudentCourses() {
     )
 }
 
-export default Courses
+export default TeacherCourses

@@ -25,6 +25,9 @@ import StudentCourseDetail from "./views/student/StudentCourseDetail.jsx";
 import Wishlist from "./views/student/Wishlist.jsx";
 import {ProfileContext} from "./views/plugin/Context.js";
 import useAxios from "./utils/useAxios.js";
+import TeacherDashboard from "./views/instructor/TeacherDashboard.jsx";
+import TeacherCourses from "./views/instructor/TeacherCourses.jsx";
+import TeacherReview from "./views/instructor/TeacherReview.jsx";
 
 function App() {
 
@@ -69,6 +72,12 @@ function App() {
                             <Route path={'/student/courses/'} element={<StudentCourses />} />
                             <Route path={'/student/courses/:enrollment_id'} element={<StudentCourseDetail />} />
                             <Route path={'/student/wishlist/'} element={<Wishlist />} />
+
+                            {/*Teacher*/}
+                            <Route path={'/instructor/dashboard/'} element={<TeacherDashboard />} />
+                            <Route path={'/instructor/courses/'} element={<TeacherCourses />} />
+                            <Route path={'/instructor/reviews/'} element={<TeacherReview />} />
+
                         </Routes>
                     </MainWrapper>
                 </BrowserRouter>

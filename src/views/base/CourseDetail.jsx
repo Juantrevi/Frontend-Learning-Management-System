@@ -381,7 +381,7 @@ function CourseDetail() {
                                                     role="tabpanel"
                                                     aria-labelledby="course-pills-tab-4"
                                                 >
-                                                    {/* Review START */}
+                                                    {/* TeacherReview START */}
                                                     <div className="row mb-1">
                                                         <h5 className="mb-4">Our Student Reviews</h5>
                                                     </div>
@@ -401,7 +401,7 @@ function CourseDetail() {
                                                             <div>
                                                                 <div className="d-sm-flex mt-1 mt-md-0 align-items-center">
                                                                     <h5 className="me-3 mb-0">Sam Jay</h5>
-                                                                    {/* Review star */}
+                                                                    {/* TeacherReview star */}
                                                                     <ul className="list-inline mb-0">
                                                                         <i className="fas fa-star text-warning" />
                                                                         <i className="fas fa-star text-warning" />
@@ -425,8 +425,8 @@ function CourseDetail() {
                                                         </div>
                                                         {/* Comment children level 1 */}
                                                         <hr />
-                                                        {/* Review item END */}
-                                                        {/* Review item START */}
+                                                        {/* TeacherReview item END */}
+                                                        {/* TeacherReview item START */}
                                                         <div className="d-md-flex my-4">
                                                             {/* Avatar */}
                                                             <div className="avatar avatar-xl me-4 flex-shrink-0">
@@ -441,7 +441,7 @@ function CourseDetail() {
                                                             <div>
                                                                 <div className="d-sm-flex mt-1 mt-md-0 align-items-center">
                                                                     <h5 className="me-3 mb-0">Benny Doggo</h5>
-                                                                    {/* Review star */}
+                                                                    {/* TeacherReview star */}
                                                                     <ul className="list-inline mb-0">
                                                                         <li className="list-inline-item me-0">
                                                                             <i className="fas fa-star text-warning" />
@@ -470,12 +470,12 @@ function CourseDetail() {
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        {/* Review item END */}
+                                                        {/* TeacherReview item END */}
                                                         {/* Divider */}
                                                         <hr />
                                                     </div>
                                                     {/* Student review END */}
-                                                    {/* Leave Review START */}
+                                                    {/* Leave TeacherReview START */}
                                                     <div className="mt-2">
                                                         <h5 className="mb-4">Leave a Review</h5>
                                                         <form className="row g-3">
@@ -511,7 +511,7 @@ function CourseDetail() {
                                                             </div>
                                                         </form>
                                                     </div>
-                                                    {/* Leave Review END */}
+                                                    {/* Leave TeacherReview END */}
                                                 </div>
                                                 {/* Content END */}
                                                 {/* Content START */}
@@ -773,7 +773,7 @@ function CourseDetail() {
                                                     role="tabpanel"
                                                     aria-labelledby="course-pills-tab-6"
                                                 >
-                                                    {/* Review START */}
+                                                    {/* TeacherReview START */}
                                                     <div className="row">
                                                         <div className="col-12">
                                                             <h5 className="mb-4">Group Chat & Q/A Forum</h5>

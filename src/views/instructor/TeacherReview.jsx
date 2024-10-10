@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 
-function Review() {
+function TeacherReview() {
+
+
+
+
+
+
     return (
         <>
             <BaseHeader />
@@ -150,4 +156,4 @@ function Review() {
     )
 }
 
-export default Review
+export default TeacherReview

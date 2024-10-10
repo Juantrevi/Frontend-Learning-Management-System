@@ -230,7 +230,7 @@ function StudentCourseDetail() {
     useAxios().post(`/student/rate-course/`, formData).then((res) => {
       Toast().fire({
         icon: 'info',
-        title: 'Review updated successfully'
+        title: 'TeacherReview updated successfully'
       })
 
     })
@@ -248,7 +248,7 @@ function StudentCourseDetail() {
     useAxios().patch(`/student/review-detail/${studentReview?.id}/`, formData).then((res) => {
       Toast().fire({
         icon: 'info',
-        title: 'Review updated'
+        title: 'TeacherReview updated'
       })
     })
 
