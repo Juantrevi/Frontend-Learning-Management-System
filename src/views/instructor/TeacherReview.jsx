@@ -4,13 +4,28 @@ import Header from './Partials/Header'
 
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
+import useAxios from "../../utils/useAxios.js";
+import Rater from "../../components/Rater.jsx";
+import moment from "moment";
 
 function TeacherReview() {
 
+    const [reviews, setReviews] = useState([])
+
+
+    const fetchReviews = async () => {
+        useAxios().get(`teacher/review-list/`).then((res) => {
+            console.log(res.data)
+            setReviews(res.data)
+        })
+    }
 
 
 
 
+    useEffect(() => {
+        fetchReviews()
+    }, []);
 
     return (
         <>
@@ -74,74 +89,92 @@ function TeacherReview() {
                                     {/* List group */}
                                     <ul className="list-group list-group-flush">
                                         {/* List group item */}
-                                        <li className="list-group-item p-4 shadow rounded-3">
-                                            <div className="d-flex">
-                                                <img
-                                                    src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-1.jpg"
-                                                    alt="avatar"
-                                                    className="rounded-circle avatar-lg"
-                                                    style={{ width: "70px", height: "70px", borderRadius: "50%", objectFit: "cover" }}
-                                                />
-                                                <div className="ms-3 mt-2">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div>
-                                                            <h4 className="mb-0">Eleanor Pena</h4>
-                                                            <span>2 hour ago</span>
-                                                        </div>
-                                                        <div>
-                                                            <a
-                                                                href="#"
-                                                                data-bs-toggle="tooltip"
-                                                                data-placement="top"
-                                                                title="Report Abuse"
-                                                            >
-                                                                <i className="fe fe-flag" />
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div className="mt-2">
-                                                        <span className="fs-6 me-1 align-top">
-                                                            <i className='fas fa-star text-warning'></i>
-                                                            <i className='fas fa-star text-warning'></i>
-                                                            <i className='fas fa-star text-warning'></i>
-                                                            <i className='fas fa-star text-warning'></i>
-                                                            <i className='fas fa-star text-warning'></i>
-                                                        </span>
-                                                        <span className="me-1">for</span>
-                                                        <span className="h5">
-                                                            Learn React For Beginners
-                                                        </span>
-                                                        <p className="mt-2">
-                                                            <span className='fw-bold me-2'>Review <i className='fas fa-arrow-right'></i></span>
-                                                            The course is very interesting and insightful. I think it
-                                                            should have more downloadable resources  downloadable resources
-                                                        </p>
-                                                        <p className="mt-2">
-                                                            <span className='fw-bold me-2'>Response <i className='fas fa-arrow-right'></i></span>
-                                                            Thanks for the review!
-                                                        </p>
-                                                        <p>
-                                                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                                                Send Response
-                                                            </button>
-                                                        </p>
-                                                        <div class="collapse" id="collapseExample">
-                                                            <div class="card card-body">
-                                                                <form>
-                                                                    <div class="mb-3">
-                                                                        <label for="exampleInputEmail1" class="form-label">Write Response</label>
-                                                                        <textarea name="" id="" cols="30" className='form-control' rows="4"></textarea>
-                                                                    </div>
-
-                                                                    <button type="submit" class="btn btn-primary">Send Response <i className='fas fa-paper-plane'> </i></button>
-                                                                </form>
+                                        {reviews?.map((r, index) => (
+                                            <li className="list-group-item p-4 shadow rounded-3 mb-4">
+                                                <div className="d-flex">
+                                                    <img
+                                                        src={r.profile.image}
+                                                        alt="avatar"
+                                                        className="rounded-circle avatar-lg"
+                                                        style={{
+                                                            width: "70px",
+                                                            height: "70px",
+                                                            borderRadius: "50%",
+                                                            objectFit: "cover"
+                                                        }}
+                                                    />
+                                                    <div className="ms-3 mt-2">
+                                                        <div
+                                                            className="d-flex align-items-center justify-content-between">
+                                                            <div>
+                                                                <h4 className="mb-0">{r.profile.full_name}</h4>
+                                                                <span>{moment(r.date).format('DD MMM YYYY')}</span>
+                                                            </div>
+                                                            <div>
+                                                                <a
+                                                                    href="#"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="Report Abuse"
+                                                                >
+                                                                    <i className="fe fe-flag"/>
+                                                                </a>
                                                             </div>
                                                         </div>
+                                                        <div className="mt-2">
+                                                        <span className="fs-6 me-1 align-top">
+                                                            <Rater rating={r.rating} total={5}/>
+                                                        </span>
+                                                            <span className="me-1">for</span>
+                                                            <span className="h5">
+                                                            {r?.course?.title}
+                                                        </span>
+                                                            <p className="mt-2">
+                                                                <span className='fw-bold me-2'>Review <i
+                                                                    className='fas fa-arrow-right'></i></span>
+                                                                {r.review}
+                                                            </p>
+                                                            <p className="mt-2">
+                                                                <span className='fw-bold me-2'>Response <i
+                                                                    className='fas fa-arrow-right'></i></span>
+                                                                {r.reply || 'NO REPLY'}
+                                                            </p>
+                                                            <p>
+                                                                <button className="btn btn-outline-secondary"
+                                                                        type="button" data-bs-toggle="collapse"
+                                                                        data-bs-target="#collapseExample"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="collapseExample">
+                                                                    Send Response
+                                                                </button>
+                                                            </p>
+                                                            <div className="collapse" id="collapseExample">
+                                                                <div className="card card-body">
+                                                                    <form>
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="exampleInputEmail1"
+                                                                                   className="form-label">Write
+                                                                                Response</label>
+                                                                            <textarea name="" id="" cols="30"
+                                                                                      className='form-control'
+                                                                                      rows="4"></textarea>
+                                                                        </div>
 
+                                                                        <button type="submit"
+                                                                                className="btn btn-primary">Send
+                                                                            Response <i
+                                                                                className='fas fa-paper-plane'> </i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
+                                            </li>
+                                        ))}
+
 
                                     </ul>
                                 </div>
@@ -151,7 +184,7 @@ function TeacherReview() {
                 </div>
             </section>
 
-            <BaseFooter />
+            <BaseFooter/>
         </>
     )
 }
