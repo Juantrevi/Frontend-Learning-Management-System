@@ -1,11 +1,31 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
+import useAxios from "../../utils/useAxios.js";
 
 function Earning() {
+
+    const [stats, setStats] = useState([])
+    const [earning, setEarning] = useState([])
+    const [bestSellingCourse, setBestSellingCourse] = useState([])
+
+
+    useEffect(() => {
+        useAxios().get(`/teacher/summary/`).then((res) => {
+          setStats(res.data[0])
+        })
+        useAxios().get(`/teacher/all-months-earning/`).then((res) => {
+          setEarning(res.data)
+        })
+        useAxios().get(`/teacher/best-course-earning/`).then((res) => {
+          setBestSellingCourse(res.data)
+        })
+    }, []);
+
+
     return (
         <>
             <BaseHeader />
@@ -60,16 +80,15 @@ function Earning() {
                                       <div className="border p-3 rounded shadow-sm">
                                         <i className="fe fe-shopping-cart icon-shape icon-sm rounded-3 bg-light-success text-dark-success mt-2" />
                                         <h3 className="display-4 fw-bold mt-3 mb-0">
-                                          ${"95.00"}
+                                          ${stats?.monthly_revenue}
                                         </h3>
-                                        <span>Monthly Earnings (Jan)</span>
-                                      </div>
+                                        <span>Monthly Earnings ({new Date().toLocaleString('default', { month: 'short' })})</span>                                      </div>
                                     </div>
                                     <div className="col-xl-6 col-lg-6 col-md-12 col-12 mb-3 mb-lg-0">
                                       <div className="border p-3 rounded shadow-sm">
                                         <i className="fe fe-shopping-cart icon-shape icon-sm rounded-3 bg-light-success text-dark-success mt-2" />
                                         <h3 className="display-4 fw-bold mt-3 mb-0">
-                                          ${"25.00"}
+                                          ${stats?.total_revenue}
                                         </h3>
                                         <span>Your Revenue</span>
                                       </div>
@@ -94,24 +113,30 @@ function Earning() {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {bestSellingCourse.map((course, index) => (
                                             <tr>
                                                 <td>
                                                     <a href="#" className='text-decoration-none text-dark'>
                                                         <div className="d-flex align-items-center">
                                                             <img
-                                                                src="https://geeksui.codescandy.com/geeks/assets/images/course/course-laravel.jpg"
+                                                                src={`http://localhost:8000/${course?.course_image}`}
                                                                 alt="course"
-                                                                style={{ width: "100px", height: "70px", borderRadius: "50%", objectFit: "cover" }}
+                                                                style={{
+                                                                    width: "100px",
+                                                                    height: "70px",
+                                                                    borderRadius: "50%",
+                                                                    objectFit: "cover"
+                                                                }}
                                                                 className="rounded img-4by3-lg"
                                                             />
                                                             <h5 className="mb-0 ms-3 ">
-                                                                Building Scalable APIs with GraphQL
+                                                                {course?.title}
                                                             </h5>
                                                         </div>
                                                     </a>
                                                 </td>
-                                                <td>34</td>
-                                                <td>$3,145.23</td>
+                                                <td>{course?.sales}</td>
+                                                <td>${course?.revenue}</td>
                                                 <td className="align-middle border-top-0">
                                                     <span className="dropdown dropstart">
                                                         <a
@@ -123,7 +148,7 @@ function Earning() {
                                                             data-bs-offset="-20,20"
                                                             aria-expanded="false"
                                                         >
-                                                            <i className="fe fe-more-vertical" />
+                                                            <i className="fe fe-more-vertical"/>
                                                         </a>
                                                         <span
                                                             className="dropdown-menu"
@@ -131,17 +156,19 @@ function Earning() {
                                                         >
                                                             <span className="dropdown-header">Setting</span>
                                                             <a className="dropdown-item" href="#">
-                                                                <i className="fe fe-edit dropdown-item-icon" />
+                                                                <i className="fe fe-edit dropdown-item-icon"/>
                                                                 Edit
                                                             </a>
                                                             <a className="dropdown-item" href="#">
-                                                                <i className="fe fe-trash dropdown-item-icon" />
+                                                                <i className="fe fe-trash dropdown-item-icon"/>
                                                                 Remove
                                                             </a>
                                                         </span>
                                                     </span>
                                                 </td>
                                             </tr>
+                                        ))}
+
 
                                         </tbody>
                                     </table>
@@ -157,17 +184,19 @@ function Earning() {
                                 <div className="table-responsive">
                                     <table className="table mb-0">
                                         <thead className="table-light">
-                                            <tr>
+                                        <tr>
 
-                                                <th>Month</th>
-                                                <th>Amount</th>
-                                            </tr>
+                                            <th>Month</th>
+                                            <th>Amount</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
+                                        {earning.map((earn, index) => (
                                             <tr>
-                                                <td>January 2024</td>
-                                                <td>$1200</td>
+                                                <td>{new Date(0, earn?.month - 1).toLocaleString('default', {month: 'long'})}</td>
+                                                <td>${earn?.total_earning}</td>
                                             </tr>
+                                        ))}
 
                                         </tbody>
                                     </table>
@@ -178,7 +207,7 @@ function Earning() {
                 </div>
             </section>
 
-            <BaseFooter />
+            <BaseFooter/>
         </>
     )
 }

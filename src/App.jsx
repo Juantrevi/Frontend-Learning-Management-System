@@ -29,6 +29,7 @@ import TeacherDashboard from "./views/instructor/TeacherDashboard.jsx";
 import TeacherCourses from "./views/instructor/TeacherCourses.jsx";
 import TeacherReview from "./views/instructor/TeacherReview.jsx";
 import Students from "./views/instructor/Students.jsx";
+import Earning from "./views/instructor/Earning.jsx";
 
 function App() {
 
@@ -79,6 +80,7 @@ function App() {
                             <Route path={'/instructor/courses/'} element={<TeacherCourses />} />
                             <Route path={'/instructor/reviews/'} element={<TeacherReview />} />
                             <Route path={'/instructor/students/'} element={<Students />} />
+                            <Route path={'/instructor/earning/'} element={<Earning />} />
 
                         </Routes>
                     </MainWrapper>
