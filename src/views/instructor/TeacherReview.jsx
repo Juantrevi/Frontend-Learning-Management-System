@@ -11,12 +11,15 @@ import Toast from "../plugin/Toast.js";
 function TeacherReview() {
     const [reviews, setReviews] = useState([]);
     const [reply, setReply] = useState('');
+    const [filteredReviews, setFilteredReviews] = useState([]);
+
 
     const fetchReviews = async () => {
         useAxios().get(`teacher/review-list/`).then((res) => {
             setReviews(res.data);
         });
     };
+
 
     const handleSubmitReply = async (e, reviewId) => {
         e.preventDefault(); // Prevent form submission from reloading the page
@@ -34,9 +37,48 @@ function TeacherReview() {
         }
     };
 
+
+    const handleSortByRatingChange = (e) => {
+        const sortValue = parseInt(e.target.value)
+
+        if(sortValue === 0){
+            fetchReviews()
+        }else {
+            const filtered = reviews.filter((review) => review.rating === sortValue);
+            setReviews(filtered)
+        }
+    }
+
+    const handleSortByDate = (e) => {
+        const sortValue = e.target.value;
+        let sortedReview = [...reviews];
+        if (sortValue === 'Newest') {
+            sortedReview.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else if (sortValue === 'Oldest') {
+            sortedReview.sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        setReviews(sortedReview);
+    }
+
+    const handleFilterByCourse = (e) => {
+        const query = e.target.value.toLowerCase();
+        if(query === ''){
+            fetchReviews()
+        } else {
+            const filtered = reviews.filter((review) => {
+                return review.course.title.toLowerCase().includes(query)
+            });
+            setReviews(filtered);
+        }
+    }
+
+
     useEffect(() => {
         fetchReviews();
     }, []);
+
+
 
     return (
         <>
@@ -57,22 +99,19 @@ function TeacherReview() {
                                 <div className="card-body">
                                     <form className="row mb-4 gx-2">
                                         <div className="col-xl-7 col-lg-6 col-md-4 col-12 mb-2 mb-lg-0">
-                                            <select className="form-select">
-                                                <option value="">ALL</option>
-                                                <option value="How to easily create a website">
-                                                    How to easily create a website
-                                                </option>
-                                                <option value="Grunt: The JavaScript Task...">
-                                                    Grunt: The JavaScript Task...
-                                                </option>
-                                                <option value="Vue js: The JavaScript Task...">
-                                                    Vue js: The JavaScript Task...
-                                                </option>
-                                            </select>
+                                            <input
+                                                type={'text'}
+                                                className={'form-control'}
+                                                placeholder={'Search By Course'}
+                                                onChange={handleFilterByCourse}
+                                            />
                                         </div>
                                         <div className="col-xl-2 col-lg-2 col-md-4 col-12 mb-2 mb-lg-0">
-                                            <select className="form-select">
-                                                <option value="">Rating</option>
+                                            <select
+                                                className="form-select"
+                                                onChange={handleSortByRatingChange}
+                                            >
+                                                <option value={0}>Rating</option>
                                                 <option value={1}>1</option>
                                                 <option value={2}>2</option>
                                                 <option value={3}>3</option>
@@ -81,7 +120,10 @@ function TeacherReview() {
                                             </select>
                                         </div>
                                         <div className="col-xl-3 col-lg-3 col-md-4 col-12 mb-2 mb-lg-0">
-                                            <select className="form-select">
+                                            <select
+                                                className="form-select"
+                                                onChange={handleSortByDate}
+                                            >
                                                 <option value="">Sort by</option>
                                                 <option value="Newest">Newest</option>
                                                 <option value="Oldest">Oldest</option>
@@ -159,6 +201,22 @@ function TeacherReview() {
                                                 </div>
                                             </li>
                                         ))}
+
+                                        {reviews.length === 0 && (
+                                            <li className="list-group-item p-4 shadow rounded-3 mb-4">
+                                                <div className="d-flex">
+                                                    <div className="ms-3 mt-2">
+                                                        <div className="d-flex align-items-center justify-content-between">
+                                                            <div>
+                                                                <h4 className="mb-0">No reviews found</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                        )}
+
                                     </ul>
                                 </div>
                             </div>
