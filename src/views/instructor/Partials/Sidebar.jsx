@@ -56,6 +56,18 @@ function Sidebar() {
                                 </Link>
                             </li>
                             <li className="nav-item">
+                                <Link className="nav-link " to={`/instructor/coupons/`}>
+                                    {" "}
+                                    <i className="fas fa-ticket me-2"></i>Coupons
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link " to={`/instructor/notifications/`}>
+                                    {" "}
+                                    <i className="fas fa-circle-exclamation me-2"></i>Notifications
+                                </Link>
+                            </li>
+                            <li className="nav-item">
                                 <Link className="nav-link " to={`/instructor/earning/`}>
                                     {" "}
                                     <i className="fas fa-dollar-sign me-2"></i>Earning
@@ -81,7 +93,7 @@ function Sidebar() {
                         <ul className="list-unstyled ms-n2 mb-0">
                             <li className="nav-item">
                                 <Link className="nav-link" to={`/instructor/profile/`}>
-                                    {" "}
+                                {" "}
                                     <i className="fas fa-edit"></i> Edit Profile
                                 </Link>
                             </li>

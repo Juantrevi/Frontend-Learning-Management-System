@@ -111,7 +111,6 @@ import { useAuthStore } from "../store/auth.js";
 import axios from "./axios";
 import jwt_decode from "jwt-decode";
 import Cookie from "js-cookie";
-import Swal from "sweetalert2";
 import * as constants from './constant.js';
 import { handleApiError } from "./handleApiError.js";
 
