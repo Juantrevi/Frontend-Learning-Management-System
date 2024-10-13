@@ -30,6 +30,7 @@ import TeacherCourses from "./views/instructor/TeacherCourses.jsx";
 import TeacherReview from "./views/instructor/TeacherReview.jsx";
 import Students from "./views/instructor/Students.jsx";
 import Earning from "./views/instructor/Earning.jsx";
+import Orders from "./views/instructor/Orders.jsx";
 
 function App() {
 
@@ -81,6 +82,7 @@ function App() {
                             <Route path={'/instructor/reviews/'} element={<TeacherReview />} />
                             <Route path={'/instructor/students/'} element={<Students />} />
                             <Route path={'/instructor/earning/'} element={<Earning />} />
+                            <Route path={'/instructor/orders/'} element={<Orders />} />
 
                         </Routes>
                     </MainWrapper>

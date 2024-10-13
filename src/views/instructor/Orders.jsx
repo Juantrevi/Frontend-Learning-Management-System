@@ -1,13 +1,27 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
-import { Link } from 'react-router-dom'
+import useAxios from "../../utils/useAxios.js";
+import moment from "moment";
 
 
 function Orders() {
+
+    const [orders, setOrders] = useState([])
+
+    useEffect(() => {
+        useAxios().get(`/teacher/course-order-list/`).then((res) => {
+
+            setOrders(res.data)
+        })
+    }, []);
+
+
+
+
     return (
         <>
             <BaseHeader />
@@ -39,18 +53,23 @@ function Orders() {
                                             </tr>
                                         </thead>
                                         <tbody>
+
+                                        {orders?.map((order, index) => (
                                             <tr>
                                                 <td>
                                                     <h5 className="mb-0">
-                                                        <a href="#" className="text-inherit text-decoration-none text-dark">
-                                                            Building Scalable APIs with GraphQL
+                                                        <a href="#"
+                                                           className="text-inherit text-decoration-none text-dark">
+                                                            {order?.course?.title}
                                                         </a>
                                                     </h5>
                                                 </td>
-                                                <td>$89</td>
-                                                <td>#100233</td>
-                                                <td>June 9, 2020</td>
+                                                <td>${order?.price}</td>
+                                                <td>#{order?.order?.oid}</td>
+                                                <td>{moment(order.date).format('DD MMM YYYY')}</td>
                                             </tr>
+                                        ))}
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -61,7 +80,7 @@ function Orders() {
                 </div>
             </section>
 
-            <BaseFooter />
+            <BaseFooter/>
         </>
     )
 }
