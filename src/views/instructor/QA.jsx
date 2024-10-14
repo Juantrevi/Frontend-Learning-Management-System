@@ -14,7 +14,8 @@ import {useRef} from "react";
 function QA() {
 
   const lastElementRef = useRef();
-  const [questions, setQuestions] = useState([]);
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [ConversationShow, setConversationShow] = useState(false);
   const [createMessage, setCreateMessage] = useState({title: '', message: ''})
@@ -28,14 +29,13 @@ function QA() {
 
   const fetchQuestions = async () => {
     try {
-      await useAxios().get("/teacher/question-answer-list/").then((res) => {
-        setQuestions(res.data);
-        console.log(res.data);
-      });
-    }catch (error) {
-      console.log(error);
+      const response = await useAxios().get("/teacher/question-answer-list/");
+      setAllQuestions(response.data);
+      setFilteredQuestions(response.data);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
     }
-  }
+  };
 
   const handleMessageChange = (event) => {
     setCreateMessage({
@@ -63,17 +63,17 @@ function QA() {
     }
   };
 
-  const handleSearchQuestion =  (event) => {
-    const query = event.target.value.toLowerCase()
-    if(query.isEmpty ){
-      fetchCourseDetail()
-    }else {
-      const filtered = questions.filter((question) => {
-        return question.title.toLowerCase().includes(query)
-      })
-      setQuestions(filtered)
+  const handleSearchQuestion = (event) => {
+    const query = event.target.value.toLowerCase();
+    if (query === '') {
+      setFilteredQuestions(allQuestions);
+    } else {
+      const filtered = allQuestions.filter((question) =>
+          question.title.toLowerCase().includes(query)
+      );
+      setFilteredQuestions(filtered);
     }
-  }
+  };
 
   useEffect(() => {
     fetchQuestions();
@@ -124,7 +124,7 @@ function QA() {
                   </form>
                 </div>
                 {/* Card body */}
-                {questions?.map((question, index) => (
+                {filteredQuestions?.map((question, index) => (
                     <div className="card-body p-0 pt-3" key={index}>
                       <div className="vstack gap-3 p-3">
                         {/* Question item START */}
