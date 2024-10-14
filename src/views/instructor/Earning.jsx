@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 
@@ -8,22 +8,43 @@ import useAxios from "../../utils/useAxios.js";
 
 function Earning() {
 
-    const [stats, setStats] = useState([])
-    const [earning, setEarning] = useState([])
-    const [bestSellingCourse, setBestSellingCourse] = useState([])
+    // State declarations
+    // These state variables will hold the data fetched from the API
+    const [stats, setStats] = useState([]); // Holds summary statistics
+    const [earning, setEarning] = useState([]); // Holds earnings data
+    const [bestSellingCourse, setBestSellingCourse] = useState([]); // Holds data for the best selling course
 
 
+    // Define the data fetching function
+    // We use useCallback to memoize this function, preventing unnecessary re-creations
+    const fetchData = useCallback(async () => {
+        // Create an instance of the axios client with custom configurations
+        const api = useAxios();
+
+        try {
+            // Make three API calls concurrently using Promise.all
+            // This is more efficient than making sequential calls
+            const [summaryRes, earningRes, bestCourseRes] = await Promise.all([
+                api.get('/teacher/summary/'), // Fetch summary statistics
+                api.get('/teacher/all-months-earning/'), // Fetch earnings data
+                api.get('/teacher/best-course-earning/') // Fetch best selling course data
+            ]);
+
+            // Update the state with the fetched data
+            setStats(summaryRes.data[0]); // Assuming the summary is the first (and only) item in the response array
+            setEarning(earningRes.data); // Set all months' earning data
+            setBestSellingCourse(bestCourseRes.data); // Set best selling course data
+        } catch (error) {
+            // If any of the API calls fail, this block will execute
+            console.error('Error fetching data:', error);
+            // TODO: Implement user-friendly error handling, e.g., displaying an error message to the user
+        }
+    }, []); // Empty dependency array means this function is created once and never recreated
+
+    // Effect to fetch data when the component mounts
     useEffect(() => {
-        useAxios().get(`/teacher/summary/`).then((res) => {
-          setStats(res.data[0])
-        })
-        useAxios().get(`/teacher/all-months-earning/`).then((res) => {
-          setEarning(res.data)
-        })
-        useAxios().get(`/teacher/best-course-earning/`).then((res) => {
-          setBestSellingCourse(res.data)
-        })
-    }, []);
+        fetchData(); // Call the fetchData function
+    }, [fetchData]); // This effect runs once on mount and whenever fetchData changes (which is never in this case)
 
 
     return (
@@ -114,7 +135,7 @@ function Earning() {
                                         </thead>
                                         <tbody>
                                         {bestSellingCourse.map((course, index) => (
-                                            <tr>
+                                            <tr key={index}>
                                                 <td>
                                                     <a href="#" className='text-decoration-none text-dark'>
                                                         <div className="d-flex align-items-center">
@@ -192,7 +213,7 @@ function Earning() {
                                         </thead>
                                         <tbody>
                                         {earning.map((earn, index) => (
-                                            <tr>
+                                            <tr key={index}>
                                                 <td>{new Date(0, earn?.month - 1).toLocaleString('default', {month: 'long'})}</td>
                                                 <td>${earn?.total_earning}</td>
                                             </tr>
