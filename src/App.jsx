@@ -34,6 +34,7 @@ import Orders from "./views/instructor/Orders.jsx";
 import Coupon from "./views/instructor/Coupon.jsx";
 import TeacherNotification from "./views/instructor/TeacherNotification.jsx";
 import QA from "./views/instructor/QA.jsx";
+import Profile from "./views/instructor/Profile.jsx";
 
 function App() {
 
@@ -88,6 +89,8 @@ function App() {
                             <Route path={'/instructor/orders/'} element={<Orders />} />
                             <Route path={'/instructor/coupons/'} element={<Coupon />} />
                             <Route path={'/instructor/question-answer/'} element={<QA />} />
+                            <Route path={'/instructor/change-password/'} element={<ChangePassword />} />
+                            <Route path={'/instructor/profile/'} element={<StudentProfile />} />
 
                         </Routes>
                     </MainWrapper>
